@@ -1,23 +1,36 @@
+<h1>Task list</h1>
 <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
-    <div>
+    <div class="form-row">
         <label for="title">Title</label>
         <input type="text" id="title" formControlName="title">
     </div>
 
-     <div>
+     <div class="form-row">
         <label for="description">Description</label>
         <input type="text" id="description" formControlName="description">
     </div>
 
-     <div>
+     <div class="form-row">
         <label for="type">Type</label>
-        <input type="text" id="type" formControlName="type">
+        <select name="type" id="type" formControlName="type">
+            <option value="">Select Task Type</option>
+
+            @for (type of types; track type) {
+                <option [value]="type">{{ type }}</option>
+            }
+        </select>
     </div>
 
-    <div>
+    <div class="form-row">
         <label for="status">Status</label>
-        <input type="text" id="status" formControlName="status">
+        <select id="status" formControlName="status">
+            <option value="">Select a Status</option>
+
+            @for (status of statuses; track status) {
+                <option [value]="status">{{ status }}</option>
+            }
+        </select>
     </div>
 
-    <button type="submit">Create Task</button>
+    <button class="task-list-btn" type="submit" [disabled]="!taskForm.valid">Create Task</button>
 </form>
