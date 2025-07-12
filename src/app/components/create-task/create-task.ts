@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Task } from '../../models/task.model';
+import { Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-create-task',
@@ -10,18 +11,23 @@ import { Task } from '../../models/task.model';
   styleUrl: './create-task.scss'
 })
 export class CreateTask implements OnInit {
+  @Output() taskCreated = new EventEmitter<Task>();
+
    // Declare a property to hold the form structure
   taskForm!: FormGroup;
+  statuses: string[] = ['To Do', 'In Progress', 'Done'];
+  types: string[] = ['Bug', 'Feature', 'Chore'];
+
 
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.taskForm = this.fb.group({
       // [initialValue]
-      title: [''],
+      title: ['', Validators.required],
       description : [''],
-      type: [''],
-      status: ['']
+      type: ['', Validators.required],
+      status: ['', Validators.required]
     });
   }
 
@@ -31,6 +37,7 @@ export class CreateTask implements OnInit {
     const newTask: Task = {
 
       //Map the values from the form to the properties of new object.
+      id: new Date().getTime(), // Use current timestamp as a unique ID
       title: this.taskForm.value.title,
       description: this.taskForm.value.description,
       type: this.taskForm.value.type,
@@ -39,6 +46,17 @@ export class CreateTask implements OnInit {
       //Sets the createdOn prooperty automatically with new date object with current timestamp.
       createdOn: new Date()
     };
-    console.log('New Task Created:', newTask);
+    //now emit the event with the new task as the payload.
+    this.taskCreated.emit(newTask);
+    // Reset the form values to empty strings instead of null.
+    this.taskForm.patchValue({
+      title: '',
+      description: '',
+      type: '',
+      status: ''
+    });
+  
+    this.taskForm.markAsPristine();
+    this.taskForm.markAsUntouched();
   }
 }
