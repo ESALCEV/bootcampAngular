@@ -2,7 +2,8 @@ form{
     max-width: 600px;
 }
 .form-row {
-  display: flex;          
+  display: flex;    
+  flex-wrap: wrap;      
   align-items: center;    
   margin-bottom: 12px;    
 }
@@ -27,4 +28,16 @@ form{
 .task-list-btn{
     margin: auto;    
     cursor: pointer;          
+}
+
+.error-container {
+  width: calc(100% - 120px - 16px);
+  margin-left: auto;
+  padding-top: 4px;
+}
+
+.error-message {
+  color: #D32F2F;
+  font-size: 12px;
+  font-weight: bold;
 }
