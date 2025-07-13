@@ -19,7 +19,9 @@ export class CreateTask implements OnInit {
   types: string[] = ['Bug', 'Feature', 'Chore'];
 
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+  ) {}
 
   ngOnInit(): void {
     this.taskForm = this.fb.group({
