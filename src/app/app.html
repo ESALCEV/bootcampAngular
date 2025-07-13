@@ -1,21 +1,7 @@
-  <main>
-    <app-header />
-    
-    <app-create-task (taskCreated)="addTaskToList($event)"/>
+<app-header />
+    <main>
+      <router-outlet />
     <hr>
-    <h2>Current tasks:</h2>
-    @for (task of taskList; track task.id) {
-      <div class="task-item">
-        <h3>{{ task.title }}</h3>
-        <p><b>Description:</b> {{ task.description }}</p>
-        <p>Status: {{ task.status }} | Type: {{ task.type }} | Created On: {{ task.createdOn | date:'d.MM.yyyy' }}</p>
-        <button (click)="deleteTask(task)">Delete</button>
-      </div>
-      <!-- <hr> -->
-    } @empty {
-      <!-- @empty block shown if the 'taskList' array is empty -->
-       <p>No tasks added yet.</p>
-    }
   </main>
 
-<router-outlet />
+<!-- <router-outlet /> -->
