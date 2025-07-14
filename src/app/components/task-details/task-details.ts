@@ -1,10 +1,8 @@
 import { CommonModule  } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Task } from '../../models/task.model';
-import { HttpClient } from '@angular/common/http';
-
-
+import { TaskService } from '../../services/task.service';
 
 @Component({
   selector: 'app-task-details',
@@ -17,16 +15,16 @@ export class TaskDetails {
 
   constructor(
     private route: ActivatedRoute,
-    private http: HttpClient
+    private taskService: TaskService
   ){}
 
   ngOnInit(): void {
     const taskIdString = this.route.snapshot.paramMap.get('id');
-
-    const taskId = Number(taskIdString);
-
-    this.http.get<Task[]>('assets/tasks.json').subscribe((allTasks) => {
-      this.task = allTasks.find(task => task.id === taskId);
-    });
+    if(taskIdString){
+      const taskId = Number(taskIdString);
+      this.taskService.getTaskByID(taskId).subscribe((foundTask) => {
+        this.task = foundTask;
+      });
+    }
   }
 }

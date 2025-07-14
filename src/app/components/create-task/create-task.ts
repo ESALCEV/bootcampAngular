@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Task } from '../../models/task.model';
 import { Output, EventEmitter } from '@angular/core';
+import { TaskService } from '../../services/task.service';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-create-task',
@@ -21,6 +24,8 @@ export class CreateTask implements OnInit {
 
   constructor(
     private fb: FormBuilder,
+    private taskService: TaskService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -68,15 +73,7 @@ export class CreateTask implements OnInit {
     };
     //now emit the event with the new task as the payload.
     this.taskCreated.emit(newTask);
-    // Reset the form values to empty strings instead of null.
-    this.taskForm.patchValue({
-      title: '',
-      description: '',
-      type: '',
-      status: ''
-    });
-  
-    this.taskForm.markAsPristine();
-    this.taskForm.markAsUntouched();
+    this.taskService.createTask(newTask);
+    this.router.navigate(['/task-list']);
   }
 }
