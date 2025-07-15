@@ -29,7 +29,7 @@ export class App implements OnInit {
   }
 
   onTaskAdded(newTask: Task): void{
-    this.tasks.push(newTask);
+    this.tasks = [newTask, ...this.tasks]; //new array with new task at the beginning
     console.log('Task received by parent:', this.tasks);
   }
   deleteTask(taskToDelete: Task): void{

@@ -2,15 +2,13 @@
 <main class="main">
   <app-create-task (taskCreated)="onTaskAdded($event)"></app-create-task>
   <hr>
-  <h1>My Task List</h1>
+  <h1>Task List</h1>
   <h2>Current Tasks:</h2>
   @for (task of tasks; track task.id) {
-  <div>
+  <div class="task-item"> 
     <h3>{{ task.title }}</h3>
-    <p>{{ task.description }}</p>
-    <p>{{ task.type }}</p>
-    <p>{{ task.status }}</p>
-    <p>{{ task.createdOn | date:'d.MM.yyyy' }}</p>
+    <p><b>Description:</b> {{ task.description }}</p>
+    <p>Status: {{ task.status }} | Type: {{ task.type }} | Created On: {{ task.createdOn | date:'d.MM.yyyy' }}</p>
 
     <button (click)="deleteTask(task)">Delete</button>
   </div>
