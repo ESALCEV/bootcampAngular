@@ -19,4 +19,9 @@ export class App {
     this.tasks.push(newTask);
     console.log('Task received by parent:', this.tasks);
   }
+  deleteTask(taskToDelete: Task): void{
+    this.tasks = this.tasks.filter(task => task.id !== taskToDelete.id);
+
+    console.log('Tasks after deletion:', this.tasks);
+  }
 }

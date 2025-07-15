@@ -29,7 +29,7 @@ export class CreateTask implements OnInit{
       status: ['']
     });
   }
-
+  
     onSubmit(): void {
       const newTask: Task = {
         id: new Date().getTime(), // Use current timestamp as a unique ID
