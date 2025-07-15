@@ -10,7 +10,7 @@
     <p>{{ task.description }}</p>
     <p>{{ task.type }}</p>
     <p>{{ task.status }}</p>
-    <p>{{ task.createdOn }}</p>
+    <p>{{ task.createdOn | date:'d.MM.yyyy' }}</p>
 
     <button (click)="deleteTask(task)">Delete</button>
   </div>
