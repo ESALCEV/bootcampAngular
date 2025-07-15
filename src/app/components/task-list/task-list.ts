@@ -1,23 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-
-import { Header } from './components/header/header';
-import { Task } from './models/task.model';
-import { CreateTask } from './components/create-task/create-task';
-import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Task } from '../../models/task.model';
+import { RouterLink } from '@angular/router';
 
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet, Header, CreateTask, CommonModule],
-  templateUrl: './app.html',
-  styleUrl: './app.scss'
+  selector: 'app-task-list',
+  imports: [CommonModule, RouterLink],
+  templateUrl: './task-list.html',
+  styleUrl: './task-list.scss'
 })
-export class App implements OnInit {
-  protected title = 'bootcamp';
-  
+export class TaskList implements OnInit {
   taskList: Task[] = [];
 
   constructor(private http: HttpClient){}
@@ -35,7 +29,6 @@ export class App implements OnInit {
     });
 
   }
-
 
   addTaskToList(newTask: Task): void {
     // this.taskList.push(newTask);

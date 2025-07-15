@@ -19,7 +19,9 @@ export class CreateTask implements OnInit {
   types: string[] = ['Bug', 'Feature', 'Chore'];
 
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+  ) {}
 
   ngOnInit(): void {
     this.taskForm = this.fb.group({
@@ -31,7 +33,25 @@ export class CreateTask implements OnInit {
     });
   }
 
+  // Getter for the title form control
+   get title() {
+    return this.taskForm.get('title');
+  }
+  get type() {
+    return this.taskForm.get('type');
+  } 
+  get status() {
+    return this.taskForm.get('status');
+  }
+
   onSubmit(): void{
+    if(this.taskForm.invalid){
+    // If it is, mark all fields as touched to trigger the error messages
+      this.taskForm.markAllAsTouched();
+      return;
+    }
+    // If the form is valid, create a new task object
+    
     //Create a new constant variable named 'newTask' and tell
     //TypeScript that it MUST match the shape of the 'Task' interface.
     const newTask: Task = {

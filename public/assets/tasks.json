@@ -1,6 +1,6 @@
 [
   {
-    "id": 1678886400000,
+    "id": 1,
     "title": "Set Up Project Repository",
     "description": "Initialize a new git repository on GitHub and push the initial project structure.",
     "type": "Chore",
@@ -8,7 +8,7 @@
     "createdOn": "2025-03-15T12:00:00.000Z"
   },
   {
-    "id": 1678972800000,
+    "id": 2,
     "title": "Develop Task Creation Form",
     "description": "Build the reactive form for adding new tasks to the list, including validation.",
     "type": "Feature",
@@ -16,7 +16,7 @@
     "createdOn": "2025-03-16T12:00:00.000Z"
   },
   {
-    "id": 1679059200000,
+    "id": 3,
     "title": "Fix Button Alignment on Mobile",
     "description": "The main action button is not centered correctly on viewports smaller than 400px.",
     "type": "Bug",
@@ -24,7 +24,7 @@
     "createdOn": "2025-03-17T12:00:00.000Z"
   },
   {
-    "id": 1679145600000,
+    "id": 4,
     "title": "Implement Task Deletion",
     "description": "Add a delete button to each task item that removes it from the list.",
     "type": "Feature",

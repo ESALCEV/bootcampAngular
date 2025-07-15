@@ -1,0 +1,9 @@
+@if (task) {
+    <div>
+        <h2>{{ task.title }}</h2>
+        <p><b>Description:</b> {{ task.description }}</p>
+        <p>Status: {{ task.status }} | Type: {{ task.type }} | Created On: {{ task.createdOn | date:'d.MM.yyyy' }}</p>
+    </div>
+} @else {
+    <p class="error-message">Task not found!</p>
+}
