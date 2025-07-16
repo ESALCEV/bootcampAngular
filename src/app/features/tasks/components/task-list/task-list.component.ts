@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TaskService } from '../../services/task.service';
 import { Observable } from 'rxjs';
 import { Task } from '../../models/task.model';
@@ -10,13 +10,11 @@ import { Task } from '../../models/task.model';
   standalone: false
 })
 export class TaskListComponent {  
-   tasks$: Observable<Task[]>
+  private taskService = inject(TaskService);
+  
+  tasks$: Observable<Task[]> = this.taskService.tasks$;
 
-  constructor(private taskService: TaskService) {
-     this.tasks$ = this.taskService.tasks$
-  }
-
-  deleteTask(taskToDelete: Task): void{
-    this.taskService.deleteTask(taskToDelete)
+  deleteTask(taskId: number): void{
+    this.taskService.deleteTask(taskId)
   }
 }

@@ -27,9 +27,9 @@ export class TaskService {
     this.tasksSubject.next(updatedTasks);
   }
 
-  public deleteTask(taskToDelete: Task): void {
+  public deleteTask(taskId: number): void {
     const currentTasks = this.tasksSubject.getValue();
-    const updatedTasks = currentTasks.filter(task => task.id !== taskToDelete.id);
+    const updatedTasks = currentTasks.filter(task => task.id !== taskId);
     this.tasksSubject.next(updatedTasks);
   }
 }
