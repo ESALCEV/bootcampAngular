@@ -1,27 +1,22 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
-import { TaskList } from '../task-list/task-list';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Task } from '../../models/task.model';
-import { CommonModule } from '@angular/common';
+import { TaskService } from '../../services/task.service';
 
 
 @Component({
   selector: 'app-create-task',
-  standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
-  templateUrl: './create-task.html',
-  styleUrl: './create-task.scss'
+  //imports: [ReactiveFormsModule, CommonModule],
+  templateUrl: './create-task.component.html',
+  styleUrl: './create-task.component.scss',
+  standalone: false
 })
-export class CreateTask implements OnInit{
-  @Output() taskCreated = new EventEmitter<Task>();
-
-  taskForm!: FormGroup;
+export class CreateTaskComponent {
+  taskForm: FormGroup;
   statuses: string[] = ['To Do', 'In Progress', 'Done'];
   types: string[] = ['Bug', 'Feature', 'Chore'];
 
-  constructor (private fb: FormBuilder){
-  }
-  ngOnInit(): void {
+  constructor (private fb: FormBuilder, private taskService: TaskService){
     this.taskForm = this.fb.group({
       title: [''],
       description: [''],
@@ -37,11 +32,13 @@ export class CreateTask implements OnInit{
         description: this.taskForm.value.description,
         status: this.taskForm.value.status,
         type: this.taskForm.value.type,
-
         createdOn: new Date()
       };
-      this.taskCreated.emit(newTask);
-      this.taskForm.reset();
+      this.taskService.addTask(newTask);
+      this.taskForm.reset({
+        type: '',
+        status: ''
+      });
   }
 
 }

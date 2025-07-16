@@ -1,40 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import { Component} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
-import { CreateTask } from "./components/create-task/create-task";
-import { TaskList } from "./components/task-list/task-list";
-import { Task } from './models/task.model';
-import { HttpClient } from '@angular/common/http';
+import { Task } from './features/tasks/models/task.model';
 import { CommonModule } from '@angular/common';
+import { Observable } from 'rxjs';
+import { TasksModule } from './features/tasks/tasks-module';
+import { TaskService } from './features/tasks/services/task.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CreateTask, TaskList, CommonModule],
+  imports: [RouterOutlet, TasksModule, CommonModule],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
-export class App implements OnInit {
+export class App {
   protected title = 'bootcamp';
+  tasks$: Observable<Task[]>;
 
-  tasks: Task[] = [];
-
-  constructor(private http: HttpClient) {
+  constructor(private taskService: TaskService) {
+    this.tasks$ = this.taskService.tasks$
   }
 
-  ngOnInit(): void {
-    this.http.get<Task[]>('assets/tasks.json').subscribe((loadedTasks) =>{
-      this.tasks = loadedTasks;
-      console.log('Tasks loaded from JSON:', this.tasks);
-    });
-  }
-
-  onTaskAdded(newTask: Task): void{
-    this.tasks = [newTask, ...this.tasks]; //new array with new task at the beginning
-    console.log('Task received by parent:', this.tasks);
-  }
   deleteTask(taskToDelete: Task): void{
-    this.tasks = this.tasks.filter(task => task.id !== taskToDelete.id);
-
-    console.log('Tasks after deletion:', this.tasks);
+    this.taskService.deleteTask(taskToDelete)
   }
 }
