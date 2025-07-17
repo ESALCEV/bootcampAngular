@@ -3,6 +3,21 @@
    <div class="form-row">
     <label for="title">Task Title</label>
     <input id="title" type="text" formControlName="title">
+
+    <div class="error-container">
+      @if (title?.invalid && title?.touched){
+        @if (title?.hasError('required')) {
+          <div class="error-msg">
+            Title is required.
+          </div>
+        }
+        @if(title?.hasError('minlength')) {
+          <div class="error-msg">
+            Title must be at least 3 characters long.
+          </div>
+        }
+      }
+    </div>
   </div>
 
   <div class="form-row">
@@ -19,6 +34,13 @@
                 <option [value]="type">{{ type }}</option>
             }
         </select>
+        <div class="error-container">
+            @if (type?.invalid && type?.touched){
+                <div class="error-msg">
+                    Type is required
+                </div>
+            }
+        </div>
     </div>
 
   <div class="form-row">
@@ -29,6 +51,13 @@
             <option [value]="status">{{ status }}</option>
         }
     </select>
+    <div class="error-container">
+            @if (status?.invalid && status?.touched){
+                <div class="error-msg">
+                    Status is required
+                </div>
+            }
+        </div> 
   </div>
 
   <button class="creat-task-btn" type="submit">Create Task</button>
