@@ -1,11 +1,11 @@
 <header>
   <h1>Task Application</h1>
   <nav>
+    <a routerLink="/tasks" routerLinkActive="active-link">Task List</a>
     <a routerLink="/create" routerLinkActive="active-link">Create Task</a>
   </nav>
 </header>
 
 <main class="main">
   <router-outlet />
-  <app-task-list />
 </main>
