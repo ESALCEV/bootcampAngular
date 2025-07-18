@@ -1,4 +1,7 @@
 <h1>Create Task</h1>
+@if (taskCreated){
+  <div class="success-message">Task successfully created!</div>
+}
 <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
    <div class="form-row">
     <label for="title">Task Title</label>

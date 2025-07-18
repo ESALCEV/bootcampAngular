@@ -1,6 +1,15 @@
+<header>
+  <div class="logo">
+    <a routerLink="/tasks">Task Application</a>
+  </div>
+  <nav class="main-nav">
+    <a routerLink="/tasks" routerLinkActive="active-link">Task List</a>
+    <a routerLink="/create" routerLinkActive="active-link">Create Task</a>
+  </nav>
+</header>
+
 <main class="main">
-  <app-create-task/>
-  <app-task-list />
+  <router-outlet />
 </main>
 
-<router-outlet />
+
