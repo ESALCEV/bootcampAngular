@@ -1,6 +1,8 @@
 <header>
-  <h1>Task Application</h1>
-  <nav>
+  <div class="logo">
+    <a routerLink="/tasks">Task Application</a>
+  </div>
+  <nav class="main-nav">
     <a routerLink="/tasks" routerLinkActive="active-link">Task List</a>
     <a routerLink="/create" routerLinkActive="active-link">Create Task</a>
   </nav>
@@ -9,3 +11,5 @@
 <main class="main">
   <router-outlet />
 </main>
+
+

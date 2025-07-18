@@ -14,6 +14,7 @@ export class CreateTaskComponent {
   taskForm: FormGroup;
   statuses: string[] = ['To Do', 'In Progress', 'Done'];
   types: string[] = ['Bug', 'Feature', 'Chore'];
+  taskCreated = false;
 
   constructor (private fb: FormBuilder, private taskService: TaskService){
     this.taskForm = this.fb.group({
@@ -51,6 +52,8 @@ export class CreateTaskComponent {
         type: '',
         status: ''
       });
+      this.taskCreated = true;
+      setTimeout(() => this.taskCreated = false, 3000);
   }
   
 
