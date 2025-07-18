@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Task } from '../../models/task.model';
 import { TaskService } from '../../services/task.service';
-
 
 @Component({
   selector: 'app-create-task',
@@ -18,14 +17,27 @@ export class CreateTaskComponent {
 
   constructor (private fb: FormBuilder, private taskService: TaskService){
     this.taskForm = this.fb.group({
-      title: [''],
+      title: ['', [Validators.required, Validators.minLength(3)]],
       description: [''],
-      type: [''],
-      status: ['']
+      type: ['', Validators.required],
+      status: ['', Validators.required]
     });
   }
-  
+  get title() {
+    return this.taskForm.get('title');
+  }
+  get type() {
+    return this.taskForm.get('type');
+  }
+  get status() {
+    return this.taskForm.get('status');
+  }
+
     onSubmit(): void {
+      if (this.taskForm.invalid) {
+        this.taskForm.markAllAsTouched();
+        return;
+      }
       const newTask: Task = {
         id: new Date().getTime(), // Use current timestamp as a unique ID
         title: this.taskForm.value.title,
@@ -40,5 +52,6 @@ export class CreateTaskComponent {
         status: ''
       });
   }
+  
 
 }

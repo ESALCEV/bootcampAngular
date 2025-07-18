@@ -30,3 +30,15 @@ form {
     margin: auto;    
     cursor: pointer;          
 }
+
+.error-container {
+    width: calc(100% - 7.5rem - 1rem);  // 120px + 16px
+    margin-left: auto;
+    padding-top: 0.25rem;  // 4px
+}
+
+.error-msg {
+    color: red;
+    font-size: 0.75rem;  // 12px
+    font-weight: bold;
+}
