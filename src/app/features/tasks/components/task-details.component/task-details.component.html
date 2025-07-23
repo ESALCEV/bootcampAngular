@@ -1,10 +1,10 @@
 @if (task$ | async; as task) {
-    <div class="details-card">
+    <div>
         <h2>{{ task.title }}</h2>
         <p><b>Description:</b> {{ task.description }}</p>
         <p>Status: {{ task.status }} | Type: {{ task.type }} | Created On: {{ task.createdOn | date:'d.MM.yyyy' }}</p>
         <button (click)="goBack()">Back to List</button>
     </div>
 }@else {
-    <p class="error-message">Task not found!</p>
+    <p>Task not found!</p>
 }

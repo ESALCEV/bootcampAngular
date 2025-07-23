@@ -1,6 +1,9 @@
 <h1>Create Task</h1>
 @if (taskCreated){
-  <div class="success-message">Task successfully created!</div>
+  <div class="success-message">
+    Task successfully created!
+    <button (click)="closeMessage()" class="close-btn">x</button>
+  </div>
 }
 <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
    <div class="form-row">

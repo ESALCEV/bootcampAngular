@@ -53,8 +53,9 @@ export class CreateTaskComponent {
         status: ''
       });
       this.taskCreated = true;
-      setTimeout(() => this.taskCreated = false, 3000);
   }
-  
 
+  closeMessage(): void {
+    this.taskCreated = false;
+  }
 }
