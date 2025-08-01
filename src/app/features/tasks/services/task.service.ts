@@ -35,7 +35,7 @@ export class TaskService {
       })
     )
   }
-  
+
   public deleteTask(taskId: string): Observable<void>{
     const url = `${this.apiUrl}/${taskId}`;
     return this.http.delete<void>(url).pipe(
@@ -44,6 +44,20 @@ export class TaskService {
         const updatedTasks = currentTasks.filter(task => task.id !== taskId);
         this.tasksSubject.next(updatedTasks);
         console.log(`Task with ID ${taskId} deleted successfully.`);
+      })
+    );
+  }
+
+  updateTask(taskToUpdate: Task): Observable<Task> {
+    const url = `${this.apiUrl}/${taskToUpdate.id}`;
+    return this.http.put<Task>(url, taskToUpdate).pipe(
+      tap(updatedTaskFromServer => {
+        const currentTasks = this.tasksSubject.getValue();
+        const index = currentTasks.findIndex(task => task.id === updatedTaskFromServer.id);
+        if (index !== -1) {
+          currentTasks[index] = updatedTaskFromServer;
+          this.tasksSubject.next([...currentTasks]);
+        }
       })
     );
   }
