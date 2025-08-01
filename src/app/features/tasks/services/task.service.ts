@@ -1,24 +1,26 @@
 import { Injectable } from '@angular/core';
 import { Task } from '../models/task.model';
-import { BehaviorSubject, Observable, take } from 'rxjs';
+import { BehaviorSubject, Observable, take, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TaskService {
+  private apiUrl = 'http://localhost:8080/api/tasks';
+
   private tasksSubject = new BehaviorSubject<Task[]>([]);
 
   public tasks$: Observable<Task[]> = this.tasksSubject.asObservable();
 
   constructor(private http: HttpClient){
-    this.loadInitialTasks();
+    this.fetchTasks();
   }
 
-  private loadInitialTasks(): void {
-    this.http.get<Task[]>('assets/tasks.json').pipe(take(1)).subscribe(initialTasks => {
-      this.tasksSubject.next(initialTasks);
-    });
+  private fetchTasks(): void {
+    this.http.get<Task[]>(this.apiUrl).subscribe(tasksFromApi => {
+      this.tasksSubject.next(tasksFromApi);
+    })
   }
 
    public addTask(newTask: Task): void {
