@@ -35,10 +35,16 @@ export class TaskService {
       })
     )
   }
-
-  public deleteTask(taskId: string): void {
-    const currentTasks = this.tasksSubject.getValue();
-    const updatedTasks = currentTasks.filter(task => task.id !== taskId);
-    this.tasksSubject.next(updatedTasks);
+  
+  public deleteTask(taskId: string): Observable<void>{
+    const url = `${this.apiUrl}/${taskId}`;
+    return this.http.delete<void>(url).pipe(
+      tap(() => {
+        const currentTasks = this.tasksSubject.getValue();
+        const updatedTasks = currentTasks.filter(task => task.id !== taskId);
+        this.tasksSubject.next(updatedTasks);
+        console.log(`Task with ID ${taskId} deleted successfully.`);
+      })
+    );
   }
 }
