@@ -27,11 +27,13 @@ export class TaskService {
     const url = `${this.apiUrl}/${id}`;
     return this.http.get<Task>(url);
   }
-
-   public addTask(newTask: Task): void {
-    const currentTasks = this.tasksSubject.getValue();
-    const updatedTasks = [newTask, ...currentTasks];
-    this.tasksSubject.next(updatedTasks);
+  public addTask(newTask: Omit<Task, 'id' | 'createdOn'>): Observable<Task> {
+    return this.http.post<Task>(this.apiUrl, newTask).pipe(
+      tap(savedTask => {
+        const currentTasks = this.tasksSubject.getValue();
+        this.tasksSubject.next([savedTask, ...currentTasks]);
+      })
+    )
   }
 
   public deleteTask(taskId: string): void {
