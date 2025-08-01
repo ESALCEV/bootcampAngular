@@ -23,13 +23,18 @@ export class TaskService {
     })
   }
 
+  getTaskbyId(id: string): Observable<Task>{
+    const url = `${this.apiUrl}/${id}`;
+    return this.http.get<Task>(url);
+  }
+
    public addTask(newTask: Task): void {
     const currentTasks = this.tasksSubject.getValue();
     const updatedTasks = [newTask, ...currentTasks];
     this.tasksSubject.next(updatedTasks);
   }
 
-  public deleteTask(taskId: number): void {
+  public deleteTask(taskId: string): void {
     const currentTasks = this.tasksSubject.getValue();
     const updatedTasks = currentTasks.filter(task => task.id !== taskId);
     this.tasksSubject.next(updatedTasks);

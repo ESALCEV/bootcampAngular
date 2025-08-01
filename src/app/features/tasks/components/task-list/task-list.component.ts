@@ -14,7 +14,7 @@ export class TaskListComponent {
   
   tasks$: Observable<Task[]> = this.taskService.tasks$;
 
-  deleteTask(taskId: number): void{
+  deleteTask(taskId: string): void{
     this.taskService.deleteTask(taskId)
   }
 }

@@ -17,10 +17,11 @@ export class TaskDetailsComponent {
 
   task$ = this.route.paramMap.pipe(
     switchMap(params => {
-      const id = Number(params.get('id'));
-      return this.taskService.tasks$.pipe(
-        map(tasks => tasks.find(task => task.id === id))
-      );
+      const id = params.get('id');
+      if(id){
+        return this.taskService.getTaskbyId(id);
+      }
+      return [];
     })
   );
   

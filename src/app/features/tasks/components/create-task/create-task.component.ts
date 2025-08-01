@@ -40,7 +40,7 @@ export class CreateTaskComponent {
         return;
       }
       const newTask: Task = {
-        id: new Date().getTime(), // Use current timestamp as a unique ID
+        id: new Date().getTime().toString(), // Use current timestamp as a unique ID
         title: this.taskForm.value.title,
         description: this.taskForm.value.description,
         status: this.taskForm.value.status,
