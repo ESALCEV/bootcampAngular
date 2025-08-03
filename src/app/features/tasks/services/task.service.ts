@@ -43,7 +43,6 @@ export class TaskService {
         const currentTasks = this.tasksSubject.getValue();
         const updatedTasks = currentTasks.filter(task => task.id !== taskId);
         this.tasksSubject.next(updatedTasks);
-        console.log(`Task with ID ${taskId} deleted successfully.`);
       })
     );
   }
