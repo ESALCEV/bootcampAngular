@@ -1,8 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TaskService } from '../../services/task.service';
-import { switchMap, map } from 'rxjs';
-
+import { switchMap, map, EMPTY } from 'rxjs';
 
 @Component({
   selector: 'app-task-details.component',
