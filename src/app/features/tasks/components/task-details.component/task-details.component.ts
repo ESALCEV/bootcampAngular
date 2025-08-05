@@ -21,7 +21,7 @@ export class TaskDetailsComponent {
       if(id){
         return this.taskService.getTaskbyId(id);
       }
-      return [];
+      return EMPTY;
     })
   );
   
