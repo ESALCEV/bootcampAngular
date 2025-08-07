@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Task } from '../../models/task.model';
 import { TaskService } from '../../services/task.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-task',
@@ -12,11 +13,22 @@ import { TaskService } from '../../services/task.service';
 })
 export class CreateTaskComponent {
   taskForm: FormGroup;
-  statuses: string[] = ['To Do', 'In Progress', 'Done'];
-  types: string[] = ['Bug', 'Feature', 'Chore'];
-  taskCreated = false;
+  statuses = [
+    { value: 'TO_DO', viewValue: 'To Do' },
+    { value: 'IN_PROGRESS', viewValue: 'In Progress' },
+    { value: 'DONE', viewValue: 'Done' }
+  ];
+  types = [
+    { value: 'BUG', viewValue: 'Bug' },
+    { value: 'FEATURE', viewValue: 'Feature' },
+    { value: 'CHORE', viewValue: 'Chore' }
+  ];
 
-  constructor (private fb: FormBuilder, private taskService: TaskService){
+  constructor (
+    private fb: FormBuilder, 
+    private taskService: TaskService,
+    private router: Router
+  ){
     this.taskForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3)]],
       description: [''],
@@ -39,23 +51,20 @@ export class CreateTaskComponent {
         this.taskForm.markAllAsTouched();
         return;
       }
-      const newTask: Task = {
-        id: new Date().getTime(), // Use current timestamp as a unique ID
+      const newTask: Omit<Task, 'id' | 'createdOn'> = {
         title: this.taskForm.value.title,
         description: this.taskForm.value.description,
         status: this.taskForm.value.status,
-        type: this.taskForm.value.type,
-        createdOn: new Date()
+        type: this.taskForm.value.type
       };
-      this.taskService.addTask(newTask);
-      this.taskForm.reset({
-        type: '',
-        status: ''
-      });
-      this.taskCreated = true;
-  }
 
-  closeMessage(): void {
-    this.taskCreated = false;
+      this.taskService.addTask(newTask).subscribe({
+        next: (task) => {
+          this.router.navigate(['/tasks']);
+        },
+        error: (error) => {
+          console.error('Error creating task:', error);
+        }
+      });
   }
 }

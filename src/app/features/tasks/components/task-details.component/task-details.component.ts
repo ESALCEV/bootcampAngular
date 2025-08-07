@@ -1,8 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TaskService } from '../../services/task.service';
-import { switchMap, map } from 'rxjs';
-
+import { switchMap, map, EMPTY } from 'rxjs';
 
 @Component({
   selector: 'app-task-details.component',
@@ -17,10 +16,11 @@ export class TaskDetailsComponent {
 
   task$ = this.route.paramMap.pipe(
     switchMap(params => {
-      const id = Number(params.get('id'));
-      return this.taskService.tasks$.pipe(
-        map(tasks => tasks.find(task => task.id === id))
-      );
+      const id = params.get('id');
+      if(id){
+        return this.taskService.getTaskbyId(id);
+      }
+      return EMPTY;
     })
   );
   
