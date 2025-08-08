@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { Observable } from 'rxjs';
 import { User } from '../../models/user.model';
@@ -9,9 +9,14 @@ import { User } from '../../models/user.model';
   styleUrl: './user-list.component.scss',
   standalone: false
 })
-export class UserListComponent {
+export class UserListComponent implements OnInit{
   private userService = inject(UserService);
 
   users$: Observable<User[]> = this.userService.users$;
-  
+
+  ngOnInit(): void {
+      this.userService.loadUsers();
+
+      this.users$ = this.userService.getUsers();
+  }
 }

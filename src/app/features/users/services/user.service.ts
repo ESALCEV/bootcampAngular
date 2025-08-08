@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment.development';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { User } from '../models/user.model';
+import { User } from '../../users/models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,17 +13,15 @@ export class UserService {
   private usersSubject = new BehaviorSubject<User[]>([]);
   public users$: Observable<User[]> = this.usersSubject.asObservable();
 
-  constructor(private http: HttpClient) {
-    this.fetchUsers();
+  constructor(private http: HttpClient) {}
+
+  public loadUsers(): void {
+    this.http.get<User[]>(this.apiUrl).subscribe(usersFromApi => {
+      this.usersSubject.next(usersFromApi);
+    });
   }
 
-  private fetchUsers(): void{
-    this.http.get<User[]>(this.apiUrl).subscribe({
-      next: (users) => this.usersSubject.next(users),
-      error: (error) => {
-        console.error('Failed to fetch users', error);
-        this.usersSubject.next([]);
-      }
-    });
+  public getUsers(): Observable<User[]>{
+    return this.users$;
   }
 }
