@@ -6,13 +6,15 @@ import { CreateTaskComponent } from './components/create-task/create-task.compon
 import { TaskListComponent } from './components/task-list/task-list.component';
 import { TaskDetailsComponent } from './components/task-details.component/task-details.component';
 import { RouterModule } from '@angular/router';
+import { UserListComponent } from './components/user-list/user-list.component';
 
 
 @NgModule({
   declarations: [
     CreateTaskComponent,
     TaskListComponent,
-    TaskDetailsComponent
+    TaskDetailsComponent,
+    UserListComponent
   ],
   imports: [
     CommonModule, 
@@ -22,7 +24,8 @@ import { RouterModule } from '@angular/router';
   exports: [
     CreateTaskComponent,
     TaskListComponent,
-    TaskDetailsComponent
+    TaskDetailsComponent,
+    UserListComponent
   ]
 })
 export class TasksModule { }

@@ -1,0 +1,10 @@
+<h1>User List</h1>
+<h2>Current Users:</h2>
+@for (user of users$ | async; track user.id) {
+    <div class="user-item">
+        <h3>Username: {{ user.username }}</h3>
+        <p><b>Full name:</b> {{ user.firstName }} {{ user.lastName }}</p>
+    </div>
+} @empty {
+    <p>No users found.</p>
+}
