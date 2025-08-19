@@ -1,7 +1,6 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { UserService } from '../../services/user.service';
-import { Observable } from 'rxjs';
-import { User } from '../../models/user.model';
+import { rxResource } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-user-list',
@@ -9,14 +8,19 @@ import { User } from '../../models/user.model';
   styleUrl: './user-list.component.scss',
   standalone: false
 })
-export class UserListComponent implements OnInit{
+export class UserListComponent {
   private userService = inject(UserService);
 
-  users$: Observable<User[]> = this.userService.users$;
+  private refreshTrigger = signal(0);
 
-  ngOnInit(): void {
-      this.userService.loadUsers();
+  usersResource = rxResource({
+    params: () => this.refreshTrigger(),
+    stream: () => this.userService.getUsers(),
+    defaultValue: []
+  });
 
-      this.users$ = this.userService.getUsers();
-  }
+  users = computed(() => this.usersResource.value());
+  hasValue = computed(() => this.usersResource.hasValue());
+  isLoading = computed(() => this.usersResource.status() === 'loading');
+  hasError = computed(() => this.usersResource.status() === 'error');
 }

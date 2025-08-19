@@ -1,8 +1,14 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment.development';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { User } from '../../users/models/user.model';
+
+interface RawUser {
+  username: string;
+  firstName: string;
+  lastName: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -10,18 +16,18 @@ import { User } from '../../users/models/user.model';
 export class UserService {
   private apiUrl = `${environment.apiUrl}/api/users`;
 
-  private usersSubject = new BehaviorSubject<User[]>([]);
-  public users$: Observable<User[]> = this.usersSubject.asObservable();
-
   constructor(private http: HttpClient) {}
 
-  public loadUsers(): void {
-    this.http.get<User[]>(this.apiUrl).subscribe(usersFromApi => {
-      this.usersSubject.next(usersFromApi);
-    });
-  }
-
   public getUsers(): Observable<User[]>{
-    return this.users$;
+    return this.http.get<RawUser[]>(this.apiUrl).pipe(
+      map(rawUsers =>
+        rawUsers.map(rawUser => ({
+          id: rawUser.username,
+          username: rawUser.username,
+          firstName: rawUser.firstName,
+          lastName: rawUser.lastName
+        }))
+      )
+    )
   }
 }

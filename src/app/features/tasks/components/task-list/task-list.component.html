@@ -1,13 +1,23 @@
 <h1>Task List</h1>
 <h2>Current Tasks:</h2>
- @for (task of tasks$ | async; track task.id) {
-  <div class="task-item"> 
-    <h3><a [routerLink]="['/tasks', task.id]">{{ task.title }}</a></h3>
-    <p><b>Description:</b> {{ task.description }}</p>
-    <p>Status: {{ task.status }} | Type: {{ task.type }} | Created On: {{ task.createdOn | date:'d.MM.yyyy' }}</p>
+@if (isLoading()){
+  <p>Loading tasks...</p>
 
-    <button (click)="deleteTask(task.id)">Delete</button>
-  </div>
-} @empty {
-  <p>No tasks have been added yet. Use the form above!</p>
+} @else if (hasError()) {
+  <p>Error loading tasks. Please try again.</p>
+
+} @else if (hasValue()) {
+
+  @for (task of tasks(); track task.id) {
+    <div class="task-item"> 
+      <h3><a [routerLink]="['/tasks', task.id]">{{ task.title }}</a></h3>
+      <p><b>Description:</b> {{ task.description }}</p>
+      <p>Status: {{ task.status }} | Type: {{ task.type }} | Created On: {{ task.createdOn | date:'d.MM.yyyy' }}</p>
+      
+      <button (click)="deleteTask(task.id)">Delete</button>
+    </div>
+
+  } @empty {
+    <p>No tasks have been added yet. Use the form above!</p>
+  }
 }

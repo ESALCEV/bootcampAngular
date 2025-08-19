@@ -1,7 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TaskService } from '../../services/task.service';
-import { switchMap, map, EMPTY } from 'rxjs';
+import { switchMap, EMPTY } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-task-details.component',
@@ -14,14 +15,16 @@ export class TaskDetailsComponent {
   private router = inject(Router);
   private taskService = inject(TaskService);
 
-  task$ = this.route.paramMap.pipe(
-    switchMap(params => {
-      const id = params.get('id');
-      if(id){
-        return this.taskService.getTaskbyId(id);
-      }
-      return EMPTY;
-    })
+  task = toSignal(
+    this.route.paramMap.pipe(
+      switchMap(params => {
+        const id = params.get('id');
+        if (id) {
+          return this.taskService.getTaskbyId(id);
+        }
+        return EMPTY;
+      })
+    )
   );
   
   goBack(): void {

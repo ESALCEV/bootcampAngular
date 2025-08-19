@@ -1,4 +1,4 @@
-@if (task$ | async; as task) {
+@if (task(); as task) {
     <div>
         <h2>{{ task.title }}</h2>
         <p><b>Description:</b> {{ task.description }}</p>
