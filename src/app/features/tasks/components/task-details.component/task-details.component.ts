@@ -28,8 +28,6 @@ export class TaskDetailsComponent {
       })
     )
   );
-
-  users = toSignal(this.userService.getUsers(), { initialValue: [] });
   
   goBack(): void {
     this.router.navigate(['/']);
