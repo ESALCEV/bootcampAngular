@@ -60,5 +60,15 @@
         </div> 
   </div>
 
+  <div class="form-row">
+    <label for="assignedTo">Assigned To</label>
+    <select id="assignedTo" formControlName="assignedTo">
+        <option value="UNASSIGNED">Unassigned</option>
+        @for (user of users(); track user.id) {
+            <option [value]="user.username">{{ user.firstName }} {{ user.lastName }} ({{ user.username }})</option>
+        }
+    </select>
+  </div>
+
   <button class="create-task-btn" type="submit">Create Task</button>
 </form>

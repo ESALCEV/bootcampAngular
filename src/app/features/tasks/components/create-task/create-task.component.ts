@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Task } from '../../models/task.model';
 import { TaskService } from '../../services/task.service';
 import { Router } from '@angular/router';
+import { UserService } from '../../../users/services/user.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-create-task',
@@ -13,6 +15,9 @@ import { Router } from '@angular/router';
 })
 export class CreateTaskComponent {
   taskForm: FormGroup;
+  private userService = inject(UserService);
+  users = toSignal(this.userService.getUsers(), { initialValue: [] });
+
   statuses = [
     { value: 'TO_DO', viewValue: 'To Do' },
     { value: 'IN_PROGRESS', viewValue: 'In Progress' },
@@ -33,7 +38,8 @@ export class CreateTaskComponent {
       title: ['', [Validators.required, Validators.minLength(3)]],
       description: [''],
       type: ['', Validators.required],
-      status: ['', Validators.required]
+      status: ['', Validators.required],
+      assignedTo: ['UNASSIGNED', Validators.required]
     });
   }
   get title() {
@@ -45,6 +51,9 @@ export class CreateTaskComponent {
   get status() {
     return this.taskForm.get('status');
   }
+  get assignedTo(){
+    return this.taskForm.get('assignedTo');
+  }
 
     onSubmit(): void {
       if (this.taskForm.invalid) {
@@ -55,7 +64,8 @@ export class CreateTaskComponent {
         title: this.taskForm.value.title,
         description: this.taskForm.value.description,
         status: this.taskForm.value.status,
-        type: this.taskForm.value.type
+        type: this.taskForm.value.type,
+        assignedTo: this.taskForm.value.assignedTo
       };
 
       this.taskService.addTask(newTask).subscribe({

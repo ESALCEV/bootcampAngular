@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TaskService } from '../../services/task.service';
 import { switchMap, EMPTY } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { UserService } from '../../../users/services/user.service';
 
 @Component({
   selector: 'app-task-details.component',
@@ -14,6 +15,7 @@ export class TaskDetailsComponent {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private taskService = inject(TaskService);
+  private userService = inject(UserService);
 
   task = toSignal(
     this.route.paramMap.pipe(
@@ -26,6 +28,8 @@ export class TaskDetailsComponent {
       })
     )
   );
+
+  users = toSignal(this.userService.getUsers(), { initialValue: [] });
   
   goBack(): void {
     this.router.navigate(['/']);

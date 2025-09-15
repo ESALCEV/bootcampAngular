@@ -13,7 +13,8 @@
       <h3><a [routerLink]="['/tasks', task.id]">{{ task.title }}</a></h3>
       <p><b>Description:</b> {{ task.description }}</p>
       <p>Status: {{ task.status }} | Type: {{ task.type }} | Created On: {{ task.createdOn | date:'d.MM.yyyy' }}</p>
-      
+      <p><b>Assigned To:</b> {{ task.assignedTo }}</p>
+
       <button (click)="deleteTask(task.id)">Delete</button>
     </div>
 
