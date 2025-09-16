@@ -2,7 +2,7 @@
     <div>
         <h2>{{ task.title }}</h2>
         <p><b>Description:</b> {{ task.description }}</p>
-        <p>Status: {{ task.status }} | Type: {{ task.type }} | Created On: {{ task.createdOn | date:'d.MM.yyyy' }}</p>
+        <p>Status: {{ task.status }} | Type: {{ task.type }} | Assigned To: {{ task.assignedTo }} | Created On: {{ task.createdOn | date:'d.MM.yyyy' }}</p>
         <button (click)="goBack()">Back to List</button>
     </div>
 }@else {
