@@ -1,3 +1,5 @@
+export const UNASSIGNED = 'UNASSIGNED';
+
 export interface Task {
     id: string; //MongoDB ObjectId as string
     title: string;

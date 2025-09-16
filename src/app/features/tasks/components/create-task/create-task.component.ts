@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Task } from '../../models/task.model';
+import { Task, UNASSIGNED } from '../../models/task.model';
 import { TaskService } from '../../services/task.service';
 import { Router } from '@angular/router';
 import { UserService } from '../../../users/services/user.service';
@@ -41,7 +41,7 @@ export class CreateTaskComponent {
       description: [''],
       type: ['', Validators.required],
       status: ['', Validators.required],
-      assignedTo: ['UNASSIGNED', Validators.required],
+      assignedTo: [UNASSIGNED, Validators.required],
     });
   }
 
