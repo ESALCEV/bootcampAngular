@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Task, UNASSIGNED } from '../../models/task.model';
+import { Task, TASK_STATUSES, TASK_TYPES, UNASSIGNED } from '../../models/task.model';
 import { TaskService } from '../../services/task.service';
 import { Router } from '@angular/router';
 import { UserService } from '../../../users/services/user.service';
@@ -23,17 +23,9 @@ export class CreateTaskComponent {
 
   users = toSignal(this.userService.getUsers(), { initialValue: [] });
 
-  statuses = [
-    { value: 'TO_DO', viewValue: 'To Do' },
-    { value: 'IN_PROGRESS', viewValue: 'In Progress' },
-    { value: 'DONE', viewValue: 'Done' },
-  ];
+  statuses = TASK_STATUSES;
 
-  types = [
-    { value: 'BUG', viewValue: 'Bug' },
-    { value: 'FEATURE', viewValue: 'Feature' },
-    { value: 'CHORE', viewValue: 'Chore' },
-  ];
+  types = TASK_TYPES;
 
   constructor() {
     this.taskForm = this.fb.group({
