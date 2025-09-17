@@ -1,10 +1,78 @@
 @if (task(); as task) {
     <div>
+        @if (!isEditing()) {
         <h2>{{ task.title }}</h2>
+
         <p><b>Description:</b> {{ task.description }}</p>
-        <p>Status: {{ task.status }} | Type: {{ task.type }} | Assigned To: {{ task.assignedTo }} | Created On: {{ task.createdOn | date:'d.MM.yyyy' }}</p>
+        <p><b>Type:</b> {{ task.type }}</p>
+        <p><b>Status:</b> {{ task.status }}</p>
+        <p><b>Assigned To:</b> {{ task.assignedTo }}</p>
+        <p><b>Created On:</b> {{ task.createdOn | date:'d.MM.yyyy' }}</p>
+
         <button (click)="goBack()">Back to List</button>
-    </div>
+        <button (click)="onEditClick()">Edit</button>
+    }@else  {
+        <h2>Edit Task</h2>
+        <form [formGroup]="taskForm" (ngSubmit)="onSave()">
+            <div class="form-row">
+                <label for="title">Task Title</label>
+                <input id="title" type="text" formControlName="title">
+                <div class="error-container">
+                    @if (taskForm.get('title')?.invalid && taskForm.get('title')?.touched) {
+                        <div class="error-msg">Title is required and must be at least 3 characters.</div>
+                    }
+                </div>
+            </div>
+            <div class="form-row">
+                <label for="description">Description</label>
+                <textarea id="description" formControlName="description"></textarea>
+            </div>
+            <div class="form-row">
+                <label for="type">Type</label>
+                <select id="type" formControlName="type">
+                    @for (type of types; track type.value) {
+                        <option [value]="type.value">{{ type.viewValue }}</option>
+                    }
+                </select>
+                <div class="error-container">
+                    @if (taskForm.get('type')?.invalid) {
+                        <div class="error-msg">Type is required.</div>
+                    }
+                </div>
+            </div>
+            <div class="form-row">
+                <label for="status">Status</label>
+                <select id="status" formControlName="status">
+                    @for (status of statuses; track status.value) {
+                        <option [value]="status.value">{{ status.viewValue }}</option>
+                    }
+                </select>
+                <div class="error-container">
+                    @if (taskForm.get('status')?.invalid) {
+                        <div class="error-msg">Status is required.</div>
+                    }
+                </div>
+            </div>
+            <div class="form-row">
+                <label for="assignedTo">Assigned To</label>
+                <select id="assignedTo" formControlName="assignedTo">
+                    <option value="UNASSIGNED">Unassigned</option>
+                    @for (user of users(); track user.id) {
+                        <option [value]="user.id">{{ user.firstName }} {{ user.lastName }} ({{ user.username }})</option>
+                    }
+                </select>
+                <div class="error-container">
+                    @if (taskForm.get('assignedTo')?.invalid) {
+                        <div class="error-msg">Assigned To is required.</div>
+                    }
+                </div>
+            </div>
+
+            <button class="create-task-btn" type="button" (click)="onCancel()">Cancel Edit</button>
+            <button class="create-task-btn" type="submit">Save Changes</button>
+        </form>
+    }
+</div>
 }@else {
     <p>Task not found!</p>
 }
