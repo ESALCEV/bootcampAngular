@@ -11,7 +11,7 @@
 
         <button (click)="goBack()">Back to List</button>
         <button (click)="onEditClick()">Edit</button>
-    }@else  {
+    }@else{
         <h2>Edit Task</h2>
         <form [formGroup]="taskForm" (ngSubmit)="onSave()">
             <div class="form-row">
