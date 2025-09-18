@@ -52,12 +52,12 @@ export class TaskDetailsComponent {
       type: ['', Validators.required],
       status: ['', Validators.required],
       assignedTo: [UNASSIGNED, Validators.required],
-    })
-      effect(() => {
-        const currentTask = this.task();
-        if (currentTask && this.isEditing()) {
-          this.taskForm.patchValue(currentTask);
-        }
+    });
+    effect(() => {
+      const currentTask = this.task();
+      if (currentTask && this.isEditing()) {
+        this.taskForm.patchValue(currentTask);
+      }
     });
   }
 
