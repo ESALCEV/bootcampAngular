@@ -1,8 +1,8 @@
 import { Component, effect, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TaskService } from '../../services/task.service';
-import { switchMap, EMPTY, combineLatest } from 'rxjs';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { UserService } from '../../../users/services/user.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Task, TASK_STATUSES, TASK_TYPES, UNASSIGNED } from '../../models/task.model';
@@ -23,26 +23,15 @@ export class TaskDetailsComponent {
 
   users = toSignal(this.userService.getUsers(), { initialValue: [] });
   isEditing = signal(false);
-
-  refreshPage = signal(0);
+  
+  task = signal<Task | undefined>(undefined);
 
   taskForm: FormGroup;
   types = TASK_TYPES;
   statuses = TASK_STATUSES;
 
-  task = toSignal(
-    combineLatest([
-      this.route.paramMap,
-      toObservable(this.refreshPage)
-    ]).pipe(
-      switchMap(([params]) => {
-        const id = params.get('id');
-        if (id) {
-          return this.taskService.getTaskbyId(id);
-        }
-        return EMPTY;
-      })
-    )
+  taskId = toSignal(
+    this.route.paramMap.pipe(map(params => params.get('id')))
   );
 
   constructor() {
@@ -54,8 +43,19 @@ export class TaskDetailsComponent {
       assignedTo: [UNASSIGNED, Validators.required],
     });
     effect(() => {
+      const id = this.taskId();
+
+      if (id) {
+        this.taskService.getTaskbyId(id)
+        .subscribe(fetchedTask => {
+          this.task.set(fetchedTask);
+        })
+      }
+    });
+
+    effect(() => {
       const currentTask = this.task();
-      if (currentTask && this.isEditing()) {
+      if (currentTask) {
         this.taskForm.patchValue(currentTask);
       }
     });
@@ -79,13 +79,17 @@ export class TaskDetailsComponent {
     this.taskService.updateTask(updatedTask).subscribe({
       next: () => {
         this.isEditing.set(false);
-        this.refreshPage.update(count => count + 1);
+        this.task.set(updatedTask);
       },
       error: (err) => console.error('Error updating task:', err),
     });
   }
 
   onCancel() {
+    const currentTask = this.task();
+    if (currentTask) {
+      this.taskForm.patchValue(currentTask);
+    }
     this.isEditing.set(false);
   }
 
