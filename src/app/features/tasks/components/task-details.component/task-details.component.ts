@@ -49,14 +49,8 @@ export class TaskDetailsComponent {
         this.taskService.getTaskbyId(id)
         .subscribe(fetchedTask => {
           this.task.set(fetchedTask);
+          this.populateForm(fetchedTask);
         })
-      }
-    });
-
-    effect(() => {
-      const currentTask = this.task();
-      if (currentTask) {
-        this.taskForm.patchValue(currentTask);
       }
     });
   }
@@ -88,12 +82,16 @@ export class TaskDetailsComponent {
   onCancel() {
     const currentTask = this.task();
     if (currentTask) {
-      this.taskForm.patchValue(currentTask);
+      this.populateForm(currentTask);
     }
     this.isEditing.set(false);
   }
 
   goBack(): void {
     this.router.navigate(['/']);
+  }
+  
+  populateForm(task: Task): void {
+    this.taskForm.patchValue(task);
   }
 }
