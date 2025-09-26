@@ -32,7 +32,7 @@ export class LoginComponent {
   }
   
   onLogin(): void{
-    this.loginError.set('');
+    this.loginError.set(null);
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;
