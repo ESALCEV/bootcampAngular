@@ -3,6 +3,8 @@ import { CreateTaskComponent } from './features/tasks/components/create-task/cre
 import { TaskListComponent } from './features/tasks/components/task-list/task-list.component';
 import { TaskDetailsComponent } from './features/tasks/components/task-details.component/task-details.component';
 import { UserListComponent } from './features/users/components/user-list/user-list.component';
+import { LoginComponent } from './features/auth/components/login/login.component';
+import { authGuard } from './features/auth/guards/auth.guard';
 
 export const routes: Routes = [
     {
@@ -12,18 +14,26 @@ export const routes: Routes = [
     },
     {
         path: 'create',
-        component: CreateTaskComponent
+        component: CreateTaskComponent,
+        canActivate: [authGuard]
     },
     {
         path: 'tasks',
-        component: TaskListComponent
+        component: TaskListComponent,
+        canActivate: [authGuard]
     },
     {
         path: 'tasks/:id',
-        component: TaskDetailsComponent
+        component: TaskDetailsComponent,
+        canActivate: [authGuard]
     },
     {
         path: 'users',
-        component: UserListComponent
+        component: UserListComponent,
+        canActivate: [authGuard]
+    },
+    {
+        path: 'login',
+        component: LoginComponent
     }
 ];

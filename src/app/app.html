@@ -6,11 +6,17 @@
     <a routerLink="/tasks" routerLinkActive="active-link">Task List</a>
     <a routerLink="/create" routerLinkActive="active-link">Create Task</a>
     <a routerLink="/users" routerLinkActive="active-link">User List</a>
+    @if (authService.isLoggedIn()) {
+      <span>
+        Welcome, <b>{{ userService.currentUser()?.firstName }} {{ userService.currentUser()?.lastName }}</b>
+      </span>
+      <a (click)="authService.logout()">Logout</a>
+    }@else {
+      <a routerLink="/login" routerLinkActive="active-link">Login</a>
+    }
   </nav>
 </header>
 
 <main class="main">
   <router-outlet />
 </main>
-
-
