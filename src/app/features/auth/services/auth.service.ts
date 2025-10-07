@@ -7,6 +7,11 @@ import { isPlatformBrowser } from '@angular/common';
 import { UserService } from '../../users/services/user.service';
 import { Router } from '@angular/router';
 
+interface LoginResponse {
+  token: string;
+  user: User;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -23,8 +28,11 @@ export class AuthService {
   constructor(@Inject(PLATFORM_ID) private platformId: object) {
     this.isBrowser = isPlatformBrowser(platformId);
 
-    if(this.isBrowser) {
-      this.isLoggedIn.set(localStorage.getItem('isLoggedIn') === 'true');
+    if (!this.isBrowser) return;
+    const token = localStorage.getItem('token');
+    
+    if (token) {
+      this.isLoggedIn.set(true);
       this.appRef.isStable.pipe(
         first(stable => stable === true))
         .subscribe(() => {
@@ -40,21 +48,21 @@ export class AuthService {
         this.userService.getUserId(userId).subscribe({
           error: () =>this.logout()
         });
+      } else {
+        this.logout();
       }
     }
   }
 
-  login(credentials: {username: string, password: string}): Observable<User> {
-    return this.http.post<User>(`${this.apiUrl}/login`, credentials).pipe(
-      tap(user =>{
-        const encodedCredentials = btoa(`${credentials.username}:${credentials.password}`);
-        localStorage.setItem('auth', encodedCredentials);
-
-        localStorage.setItem('userId', user.username);
-        localStorage.setItem('isLoggedIn', 'true');
-
+  login(credentials: {username: string, password: string}): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials).pipe(
+      tap(response => {
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('userId', response.user.username);
+        localStorage.setItem('isLoggedIn', 'true')
+        
         this.isLoggedIn.set(true);
-        this.userService.currentUser.set(user);
+        this.userService.currentUser.set(response.user);
 
         this.router.navigate(['/tasks']);
       })
@@ -62,7 +70,19 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem('auth');
+    const token = this.getAuthToken();
+    this.http.post(`${this.apiUrl}/logout`, { token }).subscribe({
+      next: () => {
+        this.clearStorage();
+      },
+      error: () => {
+        this.clearStorage();
+      }
+    });
+  }
+
+  private clearStorage(): void {
+    localStorage.removeItem('token');
     localStorage.removeItem('userId');
     localStorage.removeItem('isLoggedIn');
 
@@ -81,7 +101,7 @@ export class AuthService {
 
   getAuthToken(): string | null {
     if(this.isBrowser) {
-      return localStorage.getItem('auth');
+      return localStorage.getItem('token');
     }
     return null;
   }
