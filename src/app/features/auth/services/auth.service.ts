@@ -1,4 +1,4 @@
-import { ApplicationRef, inject, Inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
+import { inject, Inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import { environment } from '../../../../environments/environment.development';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../../users/models/user.model';
@@ -21,7 +21,6 @@ export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
   private isBrowser: boolean;
-  private appRef = inject(ApplicationRef);
 
   isLoggedIn = signal<boolean>(false);
 
@@ -33,19 +32,14 @@ export class AuthService {
     
     if (token) {
       this.isLoggedIn.set(true);
-      this.appRef.isStable.pipe(
-        first(stable => stable === true))
-        .subscribe(() => {
-          this.initializeUser();
-        });
     }
   }
   
-  private initializeUser(): void{
+  initializeUser(): void{
     if(this.isLoggedIn()){
       const userId = this.getUserId();
       if (userId) {
-        this.userService.getUserId(userId).subscribe({
+        this.userService.getUserId(userId).pipe(first()).subscribe({
           error: () =>this.logout()
         });
       } else {

@@ -15,8 +15,12 @@ import { AuthService } from './features/auth/services/auth.service';
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
-export class App {
+export class App{
   protected title = 'bootcamp';
   authService = inject(AuthService);
   userService = inject(UserService);
+
+  constructor() {
+      this.authService.initializeUser();
+  }
 }
