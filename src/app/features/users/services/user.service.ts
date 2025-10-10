@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { environment } from '../../../../environments/environment.development';
 import { HttpClient } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import { User } from '../../users/models/user.model';
 
 interface RawUser {
@@ -16,6 +16,8 @@ interface RawUser {
 export class UserService {
   private apiUrl = `${environment.apiUrl}/api/users`;
 
+  currentUser = signal<User | null>(null);
+
   constructor(private http: HttpClient) {}
 
   public getUsers(): Observable<User[]>{
@@ -29,5 +31,11 @@ export class UserService {
         }))
       )
     )
+  }
+
+  public getUserId(id: string): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/${id}`).pipe(
+      tap(user => this.currentUser.set(user))
+    );
   }
 }
