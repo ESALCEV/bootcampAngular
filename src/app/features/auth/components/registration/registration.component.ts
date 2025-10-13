@@ -78,9 +78,9 @@ export class RegistrationComponent {
       error: (err: HttpErrorResponse) => {
         if (err.status === 409) {
           this.registrationError.set('Username already exists. Please choose another.');
-        }else if (err.status === 400) {
+        } else if (err.status === 400) {
           this.registrationError.set('Invalid registration info');
-        }else {
+        } else {
           this.registrationError.set('An error occurred. Please try again later.');
         }
       }
