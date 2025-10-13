@@ -1,0 +1,75 @@
+<h1>Registration Page</h1>
+<form [formGroup]="registrationForm" (ngSubmit)="onRegister()">
+    <div class="form-row">
+        <label for="username">Username</label>
+        <input id="username" type="text" formControlName="username" placeholder="Enter username">
+        <div class="error-container">
+            @if (username?.invalid && username?.touched) {
+                @if (username?.hasError('required')) {
+                    <div class="error-msg">Username is required.</div>
+                }
+                @if (username?.hasError('minlength')) {
+                    <div class="error-msg">Username must be at least 3 characters.</div>
+                }
+            }
+        </div>
+    </div>
+
+    <div class="form-row">
+        <label for="firstName">First Name</label>
+        <input id="firstName" type="text" formControlName="firstName" placeholder="Enter first name">
+        <div class="error-container">
+            @if (firstName?.invalid && firstName?.touched) {
+                <div class="error-msg">First name is required.</div>
+            }
+        </div>
+    </div>
+
+    <div class="form-row">
+        <label for="lastName">Last Name</label>
+        <input id="lastName" type="text" formControlName="lastName" placeholder="Enter last name">
+        <div class="error-container">
+            @if (lastName?.invalid && lastName?.touched) {
+                <div class="error-msg">Last name is required.</div>
+            }
+        </div>
+    </div>
+
+    <div class="form-row">
+        <label for="password">Password</label>
+        <input id="password" type="password" formControlName="password" placeholder="Enter password">
+        <div class="error-container">
+            @if (password?.invalid && password?.touched) {
+                @if (password?.hasError('required')) {
+                    <div class="error-msg">Password is required.</div>
+                }
+                @if (password?.hasError('minlength')) {
+                    <div class="error-msg">Password must be at least 6 characters.</div>
+                }
+            }
+        </div>
+    </div>
+
+    <div class="form-row">
+        <label for="confirmPassword">Confirm Password</label>
+        <input id="confirmPassword" type="password" formControlName="confirmPassword" placeholder="Confirm password">
+        <div class="error-container">
+            @if (confirmPassword?.invalid && confirmPassword?.touched) {
+                @if (confirmPassword?.hasError('required')) {
+                    <div class="error-msg">Please confirm your password.</div>
+                }
+                @if (confirmPassword?.hasError('passwordMismatch')) {
+                    <div class="error-msg">Passwords do not match.</div>
+                }
+            }
+        </div>
+    </div>
+
+    @if (registrationError()) {
+        <div class="error-container">
+            <div class="error-msg">{{ registrationError() }}</div>
+        </div>
+    }
+
+    <button type="submit">Register</button>
+</form>
