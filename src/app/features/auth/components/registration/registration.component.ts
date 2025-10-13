@@ -65,7 +65,7 @@ export class RegistrationComponent {
     return null;
   }
   
-  onRegister(): void{
+  onRegister(): void {
     this.registrationError.set(null);
     if (this.registrationForm.invalid) {
       this.registrationForm.markAllAsTouched();
