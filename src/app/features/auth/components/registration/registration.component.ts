@@ -58,7 +58,14 @@ export class RegistrationComponent {
     }
     
     if (confirmPassword?.hasError('passwordMismatch')) {
-      delete confirmPassword.errors?.['passwordMismatch'];
+      if (confirmPassword.errors) {
+        delete confirmPassword.errors['passwordMismatch'];
+        if (Object.keys(confirmPassword.errors).length === 0) {
+          confirmPassword.setErrors(null);
+        } else {
+          confirmPassword.setErrors(confirmPassword.errors);
+        }
+      }
       confirmPassword.updateValueAndValidity({ onlySelf: true, emitEvent: false });
     }
     
