@@ -5,6 +5,7 @@ import { TaskDetailsComponent } from './features/tasks/components/task-details.c
 import { UserListComponent } from './features/users/components/user-list/user-list.component';
 import { LoginComponent } from './features/auth/components/login/login.component';
 import { authGuard } from './features/auth/guards/auth.guard';
+import { RegistrationComponent } from './features/auth/components/registration/registration.component';
 
 export const routes: Routes = [
     {
@@ -35,5 +36,9 @@ export const routes: Routes = [
     {
         path: 'login',
         component: LoginComponent
+    },
+    {
+        path: 'register',
+        component: RegistrationComponent
     }
 ];

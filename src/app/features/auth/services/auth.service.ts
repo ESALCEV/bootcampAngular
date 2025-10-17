@@ -12,6 +12,13 @@ interface LoginResponse {
   user: User;
 }
 
+interface RegistrationRequest {
+  username: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -51,16 +58,28 @@ export class AuthService {
   login(credentials: {username: string, password: string}): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials).pipe(
       tap(response => {
-        localStorage.setItem('token', response.token);
-        localStorage.setItem('userId', response.user.username);
-        localStorage.setItem('isLoggedIn', 'true')
-        
-        this.isLoggedIn.set(true);
-        this.userService.currentUser.set(response.user);
-
-        this.router.navigate(['/tasks']);
+        this.handleAuthSuccess(response);
       })
     );
+  }
+
+  register(registrationData: RegistrationRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.apiUrl}/register`, registrationData).pipe(
+      tap(response => {
+        this.handleAuthSuccess(response);
+      })
+    );
+  }
+
+  private handleAuthSuccess(response: LoginResponse): void {
+    localStorage.setItem('token', response.token);
+    localStorage.setItem('userId', response.user.username);
+    localStorage.setItem('isLoggedIn', 'true')
+
+    this.isLoggedIn.set(true);
+    this.userService.currentUser.set(response.user);
+
+    this.router.navigate(['/tasks']);
   }
 
   logout(): void {

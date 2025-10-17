@@ -1,20 +1,20 @@
 <h1>Login Page</h1>
 <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
-    <div>
+    <div class="form-row">
         <label for="username">Username</label>
         <input id="username" type="text" formControlName="username" placeholder="Enter username">
         <div class="error-container">
-            @if (loginForm.get('username')?.invalid && loginForm.get('username')?.touched) {
+           @if (username?.invalid && username?.touched) {
                 <div class="error-msg">Username is required.</div>
             }
         </div>
     </div>
 
-    <div>
+    <div class="form-row">
         <label for="password">Password</label>
         <input id="password" type="password" formControlName="password" placeholder="Enter password">
         <div class="error-container">
-            @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+            @if (password?.invalid && password?.touched) {
                 <div class="error-msg">Password is required.</div>
             }
         </div>
