@@ -21,7 +21,7 @@ export class TaskDetailsComponent {
   private userService = inject(UserService);
   private fb = inject(FormBuilder);
 
-  users = toSignal(this.userService.getUsers(), { initialValue: [] });
+  users = toSignal(this.userService.getAssignableUsers(), { initialValue: [] });
   isEditing = signal(false);
   
   task = signal<Task | undefined>(undefined);

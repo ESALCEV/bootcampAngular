@@ -5,10 +5,12 @@
   <nav class="main-nav">
     <a routerLink="/tasks" routerLinkActive="active-link">Task List</a>
     <a routerLink="/create" routerLinkActive="active-link">Create Task</a>
-    <a routerLink="/users" routerLinkActive="active-link">User List</a>
+    @if (authService.currentUser()?.roles?.includes(UserRole.ADMIN)) {
+      <a routerLink="/users" routerLinkActive="active-link">User List</a>
+    }
     @if (authService.isLoggedIn()) {
       <span>
-        Welcome, <b>{{ userService.currentUser()?.firstName }} {{ userService.currentUser()?.lastName }}</b>
+        Welcome, <b>{{ authService.currentUser()?.firstName }} {{ authService.currentUser()?.lastName }}</b>
       </span>
       <a (click)="authService.logout()">Logout</a>
     }@else {

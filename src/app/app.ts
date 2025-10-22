@@ -5,8 +5,8 @@ import { CommonModule } from '@angular/common';
 import { TasksModule } from './features/tasks/tasks-module';
 import { UsersModule } from './features/users/users-module';
 import { AuthModule } from './features/auth/auth-module';
-import { UserService } from './features/users/services/user.service';
 import { AuthService } from './features/auth/services/auth.service';
+import { UserRole } from './features/users/models/user.model';
 
 
 @Component({
@@ -18,7 +18,8 @@ import { AuthService } from './features/auth/services/auth.service';
 export class App{
   protected title = 'bootcamp';
   authService = inject(AuthService);
-  userService = inject(UserService);
+
+  UserRole = UserRole;
 
   constructor() {
       this.authService.initializeUser();
