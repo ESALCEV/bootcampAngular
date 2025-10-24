@@ -30,6 +30,7 @@ export class AuthService {
   private isBrowser: boolean;
 
   isLoggedIn = signal<boolean>(false);
+  currentUser = signal<User | null>(null);
 
   constructor(@Inject(PLATFORM_ID) private platformId: object) {
     this.isBrowser = isPlatformBrowser(platformId);
@@ -46,7 +47,10 @@ export class AuthService {
     if(this.isLoggedIn()){
       const userId = this.getUserId();
       if (userId) {
-        this.userService.getUserId(userId).pipe(first()).subscribe({
+        this.userService.getUserById(userId).pipe(first()).subscribe({
+          next: (user) =>{
+            this.currentUser.set(user);
+          },
           error: () =>this.logout()
         });
       } else {
@@ -77,7 +81,7 @@ export class AuthService {
     localStorage.setItem('isLoggedIn', 'true')
 
     this.isLoggedIn.set(true);
-    this.userService.currentUser.set(response.user);
+    this.currentUser.set(response.user);
 
     this.router.navigate(['/tasks']);
   }
@@ -100,7 +104,7 @@ export class AuthService {
     localStorage.removeItem('isLoggedIn');
 
     this.isLoggedIn.set(false);
-    this.userService.currentUser.set(null);
+    this.currentUser.set(null);
 
     this.router.navigate(['/login']);
   }

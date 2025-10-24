@@ -6,6 +6,9 @@ import { UserListComponent } from './features/users/components/user-list/user-li
 import { LoginComponent } from './features/auth/components/login/login.component';
 import { authGuard } from './features/auth/guards/auth.guard';
 import { RegistrationComponent } from './features/auth/components/registration/registration.component';
+import { UserDetailsComponent } from './features/users/components/user-details/user-details.component';
+import { adminGuard } from './features/auth/guards/admin.guard';
+import { guestGuard } from './features/auth/guards/guest.guard';
 
 export const routes: Routes = [
     {
@@ -31,14 +34,21 @@ export const routes: Routes = [
     {
         path: 'users',
         component: UserListComponent,
-        canActivate: [authGuard]
+        canActivate: [authGuard, adminGuard]
+    },
+    {
+        path: 'users/:id',
+        component: UserDetailsComponent,
+        canActivate: [authGuard, adminGuard]
     },
     {
         path: 'login',
-        component: LoginComponent
+        component: LoginComponent,
+        canActivate: [guestGuard]
     },
     {
         path: 'register',
-        component: RegistrationComponent
+        component: RegistrationComponent,
+        canActivate: [guestGuard]
     }
 ];
