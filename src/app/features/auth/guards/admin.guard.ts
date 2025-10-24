@@ -9,7 +9,7 @@ export const adminGuard: CanActivateFn = (route, state) => {
 
   const currentUser  = authService.currentUser();
 
-  if (currentUser && currentUser.roles?.includes(UserRole.ADMIN)) {
+  if (currentUser && currentUser.roles.includes(UserRole.ADMIN)) {
     return true;
   }
   return router.parseUrl('/tasks');

@@ -21,7 +21,7 @@ export class CreateTaskComponent {
 
   taskForm: FormGroup;
 
-  users = toSignal(this.userService.getAssignableUsers(), { initialValue: [] });
+  users = toSignal(this.userService.getUsers(), { initialValue: [] });
 
   statuses = TASK_STATUSES;
 

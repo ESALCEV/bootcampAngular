@@ -20,6 +20,7 @@ export class UserDetailsComponent {
   user = signal<User | undefined>(undefined);
   isEditing = signal(false);
   selectedRoles = signal<UserRole[]>([]);
+  errorMsg = signal<string | null>(null);
   
   assignableRoles = ASSIGNABLE_ROLES;
 
@@ -27,13 +28,23 @@ export class UserDetailsComponent {
     this.route.paramMap.pipe(
       switchMap(params => {
         const id = params.get('id');
-        if (!id) return EMPTY;
+        if (!id){
+          this.errorMsg.set('No user ID provided');
+          return EMPTY;
+        } 
+        this.errorMsg.set(null);
         return this.userService.getUserById(id);
       }),
       takeUntilDestroyed()
-    ).subscribe(user => {
-      this.user.set(user);
-    });
+    ).subscribe({
+      next: (user) => {
+        this.user.set(user);
+        this.errorMsg.set(null);
+    },
+    error: () => {
+      this.errorMsg.set('Failed to load user details.');
+    }
+  });
 
     effect(() => {
       const currentUser = this.user();
@@ -55,6 +66,10 @@ export class UserDetailsComponent {
     } else {
       this.selectedRoles.set([...this.selectedRoles(), role]);
     }
+
+    if(!this.selectedRoles().includes(UserRole.USER)) {
+      this.selectedRoles.set([...this.selectedRoles(), UserRole.USER]);
+    }
   }
 
   onEditClick(): void {
@@ -71,6 +86,10 @@ export class UserDetailsComponent {
       next: (updatedUser) => {
         this.user.set(updatedUser);
         this.isEditing.set(false);
+        this.errorMsg.set(null);
+      },
+      error: () => {
+        this.errorMsg.set('Failed to update user roles.');
       }
     });
   }

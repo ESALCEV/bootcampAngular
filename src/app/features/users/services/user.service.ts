@@ -24,11 +24,6 @@ export class UserService {
       map(rawUsers => rawUsers.map(this.mapToUser)));
   }
 
-  public getAssignableUsers(): Observable<User[]> {
-    return this.http.get<RawUser[]>(`${this.apiUrl}/assignable`)
-      .pipe(map(user => user.map(this.mapToUser)));
-  }
-
   public getUserById(id: string): Observable<User> {
     return this.http.get<User>(`${this.apiUrl}/${id}`)
       .pipe(map(this.mapToUser));
@@ -45,7 +40,7 @@ export class UserService {
       username: raw.username,
       firstName: raw.firstName,
       lastName: raw.lastName,
-      roles: raw.roles
+      roles: raw.roles || []
     };
   }
 }

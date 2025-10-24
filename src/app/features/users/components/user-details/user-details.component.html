@@ -1,43 +1,39 @@
 @if (user(); as user) {
-    <div>
-        @if (!isEditing()) {
-        <h2>User Details</h2>
-        <p><b>Username:</b> {{  user.username }}</p>
-        <p><b>First Name:</b> {{ user.firstName }}</p>
-        <p><b>Last Name:</b> {{ user.lastName }}</p>
-         @if ( user.roles ){
-            <p><b>User Role:</b> {{  user.roles.join(', ') }}</p>
+  <div>
+    @if (!isEditing()) {
+      <h2>User Details</h2>
+      <p><b>Username:</b> {{ user.username }}</p>
+      <p><b>First Name:</b> {{ user.firstName }}</p>
+      <p><b>Last Name:</b> {{ user.lastName }}</p>
+
+      @if (user.roles) {
+        <p><b>User Role:</b> {{ user.roles.join(', ') }}</p>
+      }
+
+      <button (click)="goBack()">Back to List</button>
+      <button (click)="onEditClick()">Edit Roles</button>
+    } @else {
+      <h2>Edit User Roles</h2>
+
+      <p><b>Username:</b> {{ user.username }}</p>
+      <p><b>First Name:</b> {{ user.firstName }}</p>
+      <p><b>Last Name:</b> {{ user.lastName }}</p>
+
+      <div>
+        <p><b>Assign Roles:</b></p>
+        @for (role of assignableRoles; track role.value) {
+          <div>
+            <input type="checkbox" [id]="role.value" [checked]="isRoleSelected(role.value)" [disabled]="role.disabled"
+              (change)="toggleRole(role.value)" />
+            <label [for]="role.value">{{ role.viewValue }}</label>
+          </div>
         }
+      </div>
 
-        <button (click)="goBack()">Back to List</button>
-        <button (click)="onEditClick()">Edit Roles</button>
-        }@else {
-            <h2>Edit User Roles</h2>
-            
-            <p><b>Username:</b> {{ user.username }}</p>
-            <p><b>First Name:</b> {{ user.firstName }}</p>
-            <p><b>Last Name:</b> {{ user.lastName }}</p>
-
-            <div>
-                <p><b>Assign Roles:</b></p>
-                @for (role of assignableRoles; track role.value) {
-                    <div>
-                        <input 
-                            type="checkbox" 
-                            [id]="role.value"
-                            [checked]="isRoleSelected(role.value)"
-                            [disabled]="role.disabled"
-                            (change)="toggleRole(role.value)"
-                        />
-                        <label [for]="role.value">{{ role.viewValue }}</label>
-                    </div>
-                }
-            </div>
-
-            <button (click)="onCancel()">Cancel</button>
-            <button (click)="onSave()">Save Changes</button>
-        }
-    </div>
+      <button (click)="onCancel()">Cancel</button>
+      <button (click)="onSave()">Save Changes</button>
+    }
+  </div>
 } @else {
-    <p>User not found!</p>
+  <p>User not found!</p>
 }
