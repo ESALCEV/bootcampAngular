@@ -10,7 +10,9 @@
         <p><b>Created On:</b> {{ task.createdOn | date:'d.MM.yyyy' }}</p>
 
         <button (click)="goBack()">Back to List</button>
-        <button (click)="onEditClick()">Edit</button>
+        @if (canEdit()) {
+            <button (click)="onEditClick()">Edit</button>
+        }
     }@else{
         <h2>Edit Task</h2>
         <form [formGroup]="taskForm" (ngSubmit)="onSave()">
