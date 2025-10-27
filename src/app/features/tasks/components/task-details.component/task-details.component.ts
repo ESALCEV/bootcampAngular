@@ -74,14 +74,7 @@ export class TaskDetailsComponent {
 
   canEdit(): boolean {
     const currentUser = this.authService.currentUser();
-    if (
-      currentUser?.roles.includes(UserRole.ADMIN) ||
-      currentUser?.roles.includes(UserRole.MANAGER)
-    ) {
-      return true;
-    } else {
-      return false;
-    }
+    return currentUser?.roles.includes(UserRole.ADMIN) || currentUser?.roles.includes(UserRole.MANAGER) ?? false;
   }
 
   onEditClick() {
