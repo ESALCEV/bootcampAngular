@@ -18,11 +18,7 @@ export class TaskListComponent {
   private refreshTrigger = signal(0);
 
   isAdmin(): boolean {
-    if (this.authService.currentUser()?.roles.includes(UserRole.ADMIN)) {
-      return true;
-    } else {
-      return false;
-    }
+    return this.authService.currentUser()?.roles.includes(UserRole.ADMIN) ?? false;
   }
 
   tasksResource = rxResource<Task[], number>({
