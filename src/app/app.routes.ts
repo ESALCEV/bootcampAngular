@@ -11,44 +11,44 @@ import { adminGuard } from './features/auth/guards/admin.guard';
 import { guestGuard } from './features/auth/guards/guest.guard';
 
 export const routes: Routes = [
-    {
-        path: '',
-        redirectTo: '/tasks',
-        pathMatch: 'full'
-    },
-    {
-        path: 'create',
-        component: CreateTaskComponent,
-        canActivate: [authGuard]
-    },
-    {
-        path: 'tasks',
-        component: TaskListComponent,
-        canActivate: [authGuard]
-    },
-    {
-        path: 'tasks/:id',
-        component: TaskDetailsComponent,
-        canActivate: [authGuard]
-    },
-    {
-        path: 'users',
-        component: UserListComponent,
-        canActivate: [authGuard, adminGuard]
-    },
-    {
-        path: 'users/:id',
-        component: UserDetailsComponent,
-        canActivate: [authGuard, adminGuard]
-    },
-    {
-        path: 'login',
-        component: LoginComponent,
-        canActivate: [guestGuard]
-    },
-    {
-        path: 'register',
-        component: RegistrationComponent,
-        canActivate: [guestGuard]
-    }
+  {
+    path: '',
+    redirectTo: '/tasks',
+    pathMatch: 'full',
+  },
+  {
+    path: 'create',
+    component: CreateTaskComponent,
+    canActivate: [authGuard, adminGuard],
+  },
+  {
+    path: 'tasks',
+    component: TaskListComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'tasks/:id',
+    component: TaskDetailsComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'users',
+    component: UserListComponent,
+    canActivate: [authGuard, adminGuard],
+  },
+  {
+    path: 'users/:id',
+    component: UserDetailsComponent,
+    canActivate: [authGuard, adminGuard],
+  },
+  {
+    path: 'login',
+    component: LoginComponent,
+    canActivate: [guestGuard],
+  },
+  {
+    path: 'register',
+    component: RegistrationComponent,
+    canActivate: [guestGuard],
+  },
 ];

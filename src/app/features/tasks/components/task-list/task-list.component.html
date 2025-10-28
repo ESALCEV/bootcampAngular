@@ -15,7 +15,9 @@
       <p>Status: {{ task.status }} | Type: {{ task.type }} | Created On: {{ task.createdOn | date:'d.MM.yyyy' }}</p>
       <p><b>Assigned To:</b> {{ task.assignedTo }}</p>
 
-      <button (click)="deleteTask(task.id)">Delete</button>
+      @if (isAdmin()){
+        <button (click)="deleteTask(task.id)">Delete</button>
+      }
     </div>
 
   } @empty {

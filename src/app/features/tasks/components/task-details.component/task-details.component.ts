@@ -6,33 +6,33 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { UserService } from '../../../users/services/user.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Task, TASK_STATUSES, TASK_TYPES, UNASSIGNED } from '../../models/task.model';
+import { AuthService } from '../../../auth/services/auth.service';
+import { User, UserRole } from '../../../users/models/user.model';
 
 @Component({
   selector: 'app-task-details',
   templateUrl: './task-details.component.html',
   styleUrl: '../create-task/create-task.component.scss',
-  standalone: false
+  standalone: false,
 })
-
 export class TaskDetailsComponent {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private taskService = inject(TaskService);
   private userService = inject(UserService);
   private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
 
-  users = toSignal(this.userService.getUsers(), { initialValue: [] });
+  users = signal<User[]>([]);
   isEditing = signal(false);
-  
+
   task = signal<Task | undefined>(undefined);
 
   taskForm: FormGroup;
   types = TASK_TYPES;
   statuses = TASK_STATUSES;
 
-  taskId = toSignal(
-    this.route.paramMap.pipe(map(params => params.get('id')))
-  );
+  taskId = toSignal(this.route.paramMap.pipe(map(params => params.get('id'))));
 
   constructor() {
     this.taskForm = this.fb.group({
@@ -44,19 +44,44 @@ export class TaskDetailsComponent {
     });
     effect(() => {
       const id = this.taskId();
+      const currentUser = this.authService.currentUser();
 
       if (id) {
-        this.taskService.getTaskbyId(id)
-        .subscribe(fetchedTask => {
+        this.taskService.getTaskbyId(id).subscribe(fetchedTask => {
           this.task.set(fetchedTask);
           this.populateForm(fetchedTask);
-        })
+
+          if (
+            currentUser?.roles.includes(UserRole.MANAGER) &&
+            !currentUser.roles.includes(UserRole.ADMIN)
+          ) {
+            this.taskForm.get('title')?.disable();
+            this.taskForm.get('description')?.disable();
+            this.taskForm.get('type')?.disable();
+            this.taskForm.get('status')?.disable();
+          }
+        });
       }
     });
   }
 
+  canEdit(): boolean {
+    const currentUser = this.authService.currentUser();
+    return (
+      currentUser?.roles?.includes(UserRole.ADMIN) ||
+      currentUser?.roles?.includes(UserRole.MANAGER) ||
+      false
+    );
+  }
+
   onEditClick() {
     this.isEditing.set(true);
+
+    if (this.canEdit()) {
+      this.userService.getUsers().subscribe(users => {
+        this.users.set(users);
+      });
+    }
   }
 
   onSave() {
@@ -75,7 +100,7 @@ export class TaskDetailsComponent {
         this.isEditing.set(false);
         this.task.set(updatedTask);
       },
-      error: (err) => console.error('Error updating task:', err),
+      error: err => console.error('Error updating task:', err),
     });
   }
 
@@ -90,7 +115,7 @@ export class TaskDetailsComponent {
   goBack(): void {
     this.router.navigate(['/']);
   }
-  
+
   populateForm(task: Task): void {
     this.taskForm.patchValue(task);
   }

@@ -2,22 +2,29 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { TaskService } from '../../services/task.service';
 import { Task } from '../../models/task.model';
 import { rxResource } from '@angular/core/rxjs-interop';
+import { AuthService } from '../../../auth/services/auth.service';
+import { UserRole } from '../../../users/models/user.model';
 
 @Component({
   selector: 'app-task-list',
   templateUrl: './task-list.component.html',
   styleUrl: './task-list.component.scss',
-  standalone: false
+  standalone: false,
 })
-export class TaskListComponent {  
+export class TaskListComponent {
   private taskService = inject(TaskService);
+  authService = inject(AuthService);
 
   private refreshTrigger = signal(0);
+
+  isAdmin(): boolean {
+    return this.authService.currentUser()?.roles.includes(UserRole.ADMIN) ?? false;
+  }
 
   tasksResource = rxResource<Task[], number>({
     params: () => this.refreshTrigger(),
     stream: () => this.taskService.getTasks(),
-    defaultValue: []
+    defaultValue: [],
   });
 
   tasks = computed(() => this.tasksResource.value());
@@ -25,7 +32,7 @@ export class TaskListComponent {
   isLoading = computed(() => this.tasksResource.status() === 'loading');
   hasError = computed(() => this.tasksResource.status() === 'error');
 
-  deleteTask(taskId: string): void{
+  deleteTask(taskId: string): void {
     this.taskService.deleteTask(taskId).subscribe({
       next: () => {
         this.refreshTrigger.update(count => count + 1);
