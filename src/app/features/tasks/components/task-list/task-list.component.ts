@@ -35,7 +35,7 @@ export class TaskListComponent {
   deleteTask(taskId: string): void {
     this.taskService.deleteTask(taskId).subscribe({
       next: () => {
-        this.refreshTrigger.update((count) => count + 1);
+        this.refreshTrigger.update(count => count + 1);
       },
       error(err) {
         console.error(`Failed to delete task ${taskId}`, err); // in real app would be err msg to user

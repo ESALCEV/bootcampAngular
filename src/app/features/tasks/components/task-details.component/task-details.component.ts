@@ -5,12 +5,7 @@ import { map } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { UserService } from '../../../users/services/user.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {
-  Task,
-  TASK_STATUSES,
-  TASK_TYPES,
-  UNASSIGNED,
-} from '../../models/task.model';
+import { Task, TASK_STATUSES, TASK_TYPES, UNASSIGNED } from '../../models/task.model';
 import { AuthService } from '../../../auth/services/auth.service';
 import { User, UserRole } from '../../../users/models/user.model';
 
@@ -37,9 +32,7 @@ export class TaskDetailsComponent {
   types = TASK_TYPES;
   statuses = TASK_STATUSES;
 
-  taskId = toSignal(
-    this.route.paramMap.pipe(map((params) => params.get('id')))
-  );
+  taskId = toSignal(this.route.paramMap.pipe(map(params => params.get('id'))));
 
   constructor() {
     this.taskForm = this.fb.group({
@@ -54,7 +47,7 @@ export class TaskDetailsComponent {
       const currentUser = this.authService.currentUser();
 
       if (id) {
-        this.taskService.getTaskbyId(id).subscribe((fetchedTask) => {
+        this.taskService.getTaskbyId(id).subscribe(fetchedTask => {
           this.task.set(fetchedTask);
           this.populateForm(fetchedTask);
 
@@ -74,14 +67,18 @@ export class TaskDetailsComponent {
 
   canEdit(): boolean {
     const currentUser = this.authService.currentUser();
-    return currentUser?.roles.includes(UserRole.ADMIN) || currentUser?.roles.includes(UserRole.MANAGER) ?? false;
+    return (
+      currentUser?.roles?.includes(UserRole.ADMIN) ||
+      currentUser?.roles?.includes(UserRole.MANAGER) ||
+      false
+    );
   }
 
   onEditClick() {
     this.isEditing.set(true);
 
     if (this.canEdit()) {
-      this.userService.getUsers().subscribe((users) => {
+      this.userService.getUsers().subscribe(users => {
         this.users.set(users);
       });
     }
@@ -103,7 +100,7 @@ export class TaskDetailsComponent {
         this.isEditing.set(false);
         this.task.set(updatedTask);
       },
-      error: (err) => console.error('Error updating task:', err),
+      error: err => console.error('Error updating task:', err),
     });
   }
 
