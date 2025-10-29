@@ -12,7 +12,7 @@
     <div class="task-item"> 
       <h3><a [routerLink]="['/tasks', task.id]">{{ task.title }}</a></h3>
       <p><b>{{ 'DESCRIPTION' | translate }}</b> {{ task.description }}</p>
-      <p>{{ 'STATUS' | translate }} {{ task.status }} | {{ 'TYPE' | translate }} {{ task.type }} | {{ 'CREATED_ON' | translate }} {{ task.createdOn | date }}</p>
+      <p>{{ 'STATUS' | translate }} {{ task.status }} | {{ 'TYPE' | translate }} {{ task.type }} | {{ 'CREATED_ON' | translate }} {{ task.createdOn | date:'d.MM.yyyy' }}</p>
       <p><b>{{ 'ASSIGNED_TO' | translate }}</b> {{ task.assignedTo }}</p>
 
       @if (isAdmin()){
