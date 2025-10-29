@@ -1,5 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -7,7 +13,7 @@ import { HttpErrorResponse } from '@angular/common/http';
   selector: 'app-registration',
   templateUrl: './registration.component.html',
   styleUrl: './registration.component.scss',
-  standalone: false
+  standalone: false,
 })
 export class RegistrationComponent {
   private fb = inject(FormBuilder);
@@ -17,15 +23,18 @@ export class RegistrationComponent {
   registrationError = signal<string | null>(null);
 
   constructor() {
-    this.registrationForm = this.fb.group({
-      username: ['', [Validators.required, Validators.minLength(3)]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', Validators.required],
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-    }, {
-      validators: this.passwordMatchValidator
-    });
+    this.registrationForm = this.fb.group(
+      {
+        username: ['', [Validators.required, Validators.minLength(3)]],
+        password: ['', [Validators.required, Validators.minLength(6)]],
+        confirmPassword: ['', Validators.required],
+        firstName: ['', Validators.required],
+        lastName: ['', Validators.required],
+      },
+      {
+        validators: this.passwordMatchValidator,
+      }
+    );
   }
 
   get username() {
@@ -35,7 +44,7 @@ export class RegistrationComponent {
   get password() {
     return this.registrationForm.get('password');
   }
-  
+
   get confirmPassword() {
     return this.registrationForm.get('confirmPassword');
   }
@@ -48,30 +57,21 @@ export class RegistrationComponent {
     return this.registrationForm.get('lastName');
   }
 
-  passwordMatchValidator(form: FormGroup) {
-    const password = form.get('password');
-    const confirmPassword = form.get('confirmPassword');
-      
-    if (password && confirmPassword && password.value !== confirmPassword.value) {
-      confirmPassword.setErrors({ passwordMismatch: true });
+  passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
+    const password = control.get('password');
+    const confirmPassword = control.get('confirmPassword');
+
+    if (!password || !confirmPassword || !password.value || !confirmPassword.value) {
+      return null;
+    }
+
+    if (password.value !== confirmPassword.value) {
       return { passwordMismatch: true };
     }
-    
-    if (confirmPassword?.hasError('passwordMismatch')) {
-      if (confirmPassword.errors) {
-        delete confirmPassword.errors['passwordMismatch'];
-        if (Object.keys(confirmPassword.errors).length === 0) {
-          confirmPassword.setErrors(null);
-        } else {
-          confirmPassword.setErrors(confirmPassword.errors);
-        }
-      }
-      confirmPassword.updateValueAndValidity({ onlySelf: true, emitEvent: false });
-    }
-    
+
     return null;
   }
-  
+
   onRegister(): void {
     this.registrationError.set(null);
     if (this.registrationForm.invalid) {
@@ -84,13 +84,13 @@ export class RegistrationComponent {
     this.authService.register(registrationData).subscribe({
       error: (err: HttpErrorResponse) => {
         if (err.status === 409) {
-          this.registrationError.set('Username already exists. Please choose another.');
+          this.registrationError.set('ERROR_USERNAME_EXISTS');
         } else if (err.status === 400) {
-          this.registrationError.set('Invalid registration info');
+          this.registrationError.set('ERROR_REGISTRATION_INVALID');
         } else {
-          this.registrationError.set('An error occurred. Please try again later.');
+          this.registrationError.set('ERROR_GENERIC');
         }
-      }
+      },
     });
   }
 }

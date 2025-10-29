@@ -4,20 +4,11 @@ import { LoginComponent } from './components/login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RegistrationComponent } from './components/registration/registration.component';
 import { RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
-  declarations: [
-    LoginComponent,
-    RegistrationComponent
-  ],
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    RouterLink
-  ],
-  exports: [
-    LoginComponent,
-    RegistrationComponent
-  ]
+  declarations: [LoginComponent, RegistrationComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslateModule],
+  exports: [LoginComponent, RegistrationComponent],
 })
-export class AuthModule { }
+export class AuthModule {}

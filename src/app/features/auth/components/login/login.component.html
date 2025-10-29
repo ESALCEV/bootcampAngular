@@ -1,28 +1,28 @@
-<h1>Login Page</h1>
+<h1>{{ 'LOGIN_PAGE' | translate }}</h1>
 <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
     <div class="form-row">
-        <label for="username">Username</label>
-        <input id="username" type="text" formControlName="username" placeholder="Enter username">
+        <label for="username">{{ 'USERNAME' | translate }}</label>
+        <input id="username" type="text" formControlName="username" [placeholder]="'ENTER_USERNAME' | translate">
         <div class="error-container">
            @if (username?.invalid && username?.touched) {
-                <div class="error-msg">Username is required.</div>
+                <div class="error-msg">{{ 'USERNAME_REQUIRED' | translate }}</div>
             }
         </div>
     </div>
 
     <div class="form-row">
-        <label for="password">Password</label>
-        <input id="password" type="password" formControlName="password" placeholder="Enter password">
+        <label for="password">{{ 'PASSWORD' | translate }}</label>
+        <input id="password" type="password" formControlName="password" [placeholder]="'ENTER_PASSWORD' | translate">
         <div class="error-container">
             @if (password?.invalid && password?.touched) {
-                <div class="error-msg">Password is required.</div>
+                <div class="error-msg">{{ 'PASSWORD_REQUIRED' | translate }}</div>
             }
         </div>
     </div>
     @if (loginError()) {
         <div class="error-container">
-            <div class="error-msg">{{ loginError() }}</div>
+            <div class="error-msg">{{ loginError() | translate }}</div>
         </div>
     }
-    <button type="submit">Login</button>
+    <button type="submit">{{ 'LOGIN' | translate }}</button>
 </form>

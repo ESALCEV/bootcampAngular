@@ -6,22 +6,11 @@ import { CreateTaskComponent } from './components/create-task/create-task.compon
 import { TaskListComponent } from './components/task-list/task-list.component';
 import { TaskDetailsComponent } from './components/task-details.component/task-details.component';
 import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
-  declarations: [
-    CreateTaskComponent,
-    TaskListComponent,
-    TaskDetailsComponent
-  ],
-  imports: [
-    CommonModule, 
-    ReactiveFormsModule,
-    RouterModule
-  ],
-  exports: [
-    CreateTaskComponent,
-    TaskListComponent,
-    TaskDetailsComponent
-  ]
+  declarations: [CreateTaskComponent, TaskListComponent, TaskDetailsComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslateModule],
+  exports: [CreateTaskComponent, TaskListComponent, TaskDetailsComponent],
 })
-export class TasksModule { }
+export class TasksModule {}

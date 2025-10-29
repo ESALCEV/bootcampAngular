@@ -1,28 +1,42 @@
 header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 2.5rem;      
-    height: 3.75rem;       
-    background-color: #333;
-    color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2.5rem;
+  height: 3.75rem;
+  background-color: #333;
+  color: white;
 }
 header a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .logo a {
-    color: white;
-    text-decoration: none;
-    font-size: 1.5rem;      
-    font-weight: bold;
+  color: white;
+  text-decoration: none;
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
 .main-nav a {
-    color: white;
-    text-decoration: none;
-    margin: 0 1rem;         
-    font-size: 1rem;        
-    margin-left: 1.25rem; 
-    cursor: pointer;
+  color: white;
+  text-decoration: none;
+  margin: 0 1rem;
+  font-size: 1rem;
+  margin-left: 1.25rem;
+  cursor: pointer;
+}
+
+.language-selector {
+  color: white;
+  background-color: #555;
+  border: 1px solid #666;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  margin-left: 1rem;
+  cursor: pointer;
+}
+
+.language-selector:hover {
+  background-color: #666;
 }
