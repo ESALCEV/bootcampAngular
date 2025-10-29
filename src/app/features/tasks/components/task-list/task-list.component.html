@@ -1,26 +1,26 @@
-<h1>Task List</h1>
-<h2>Current Tasks:</h2>
+<h1 >{{ 'TASK_LIST' | translate }}</h1>
+<h2>{{ 'CURRENT_TASKS' | translate }}</h2>
 @if (isLoading()){
-  <p>Loading tasks...</p>
+  <p>{{ 'LOADING_TASKS' | translate }}</p>
 
 } @else if (hasError()) {
-  <p>Error loading tasks. Please try again.</p>
+  <p>{{ 'ERROR_LOADING_TASKS' | translate }}</p>
 
 } @else if (hasValue()) {
 
   @for (task of tasks(); track task.id) {
     <div class="task-item"> 
       <h3><a [routerLink]="['/tasks', task.id]">{{ task.title }}</a></h3>
-      <p><b>Description:</b> {{ task.description }}</p>
-      <p>Status: {{ task.status }} | Type: {{ task.type }} | Created On: {{ task.createdOn | date:'d.MM.yyyy' }}</p>
-      <p><b>Assigned To:</b> {{ task.assignedTo }}</p>
+      <p><b>{{ 'DESCRIPTION' | translate }}</b> {{ task.description }}</p>
+      <p>{{ 'STATUS' | translate }} {{ task.status }} | {{ 'TYPE' | translate }} {{ task.type }} | {{ 'CREATED_ON' | translate }} {{ task.createdOn | date }}</p>
+      <p><b>{{ 'ASSIGNED_TO' | translate }}</b> {{ task.assignedTo }}</p>
 
       @if (isAdmin()){
-        <button (click)="deleteTask(task.id)">Delete</button>
+        <button (click)="deleteTask(task.id)">{{ 'DELETE' | translate }}</button>
       }
     </div>
 
   } @empty {
-    <p>No tasks have been added yet. Use the form above!</p>
+    <p>{{ 'NO_TASKS_ADDED' | translate }}</p>
   }
 }

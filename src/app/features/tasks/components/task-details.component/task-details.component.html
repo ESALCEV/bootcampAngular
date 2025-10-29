@@ -3,18 +3,18 @@
         @if (!isEditing()) {
         <h2>{{ task.title }}</h2>
 
-        <p><b>Description:</b> {{ task.description }}</p>
-        <p><b>Type:</b> {{ task.type }}</p>
-        <p><b>Status:</b> {{ task.status }}</p>
-        <p><b>Assigned To:</b> {{ task.assignedTo }}</p>
-        <p><b>Created On:</b> {{ task.createdOn | date:'d.MM.yyyy' }}</p>
+        <p i18n="@@taskDesc"><b>Description:</b> {{ task.description }}</p>
+        <p i18n="@@taskType"><b>Type:</b> {{ task.type }}</p>
+        <p i18n="@@taskStatus"><b>Status:</b> {{ task.status }}</p>
+        <p i18n="@@taskAssignedTo"><b>Assigned To:</b> {{ task.assignedTo }}</p>
+        <p i18n="@@taskCreatedOn"><b>Created On:</b> {{ task.createdOn | date }}</p>
 
-        <button (click)="goBack()">Back to List</button>
+        <button (click)="goBack()" i18n="@@backToListBtn">Back to List</button>
         @if (canEdit()) {
-            <button (click)="onEditClick()">Edit</button>
+            <button (click)="onEditClick()" i18n="@@editBtn">Edit</button>
         }
     }@else{
-        <h2>Edit Task</h2>
+        <h2 i18n>Edit Task</h2>
         <form [formGroup]="taskForm" (ngSubmit)="onSave()">
             <div class="form-row">
                 <label for="title">Task Title</label>
@@ -76,5 +76,5 @@
     }
 </div>
 }@else {
-    <p>Task not found!</p>
+    <p i18n>Task not found!</p>
 }

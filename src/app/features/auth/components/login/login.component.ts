@@ -7,7 +7,7 @@ import { HttpErrorResponse } from '@angular/common/http';
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
-  standalone: false
+  standalone: false,
 })
 export class LoginComponent {
   private fb = inject(FormBuilder);
@@ -16,7 +16,7 @@ export class LoginComponent {
   loginForm: FormGroup;
   loginError = signal<string | null>(null);
 
-  constructor(){
+  constructor() {
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
       password: ['', Validators.required],
@@ -30,8 +30,8 @@ export class LoginComponent {
   get password() {
     return this.loginForm.get('password');
   }
-  
-  onLogin(): void{
+
+  onLogin(): void {
     this.loginError.set(null);
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
@@ -40,11 +40,11 @@ export class LoginComponent {
     this.authService.login(this.loginForm.value).subscribe({
       error: (err: HttpErrorResponse) => {
         if (err.status === 401) {
-          this.loginError.set('Invalid username or password');
+          this.loginError.set('ERROR_LOGIN_INVALID_CREDENTIALS');
         } else {
-          this.loginError.set('An error occurred. Please try again later.');
+          this.loginError.set('ERROR_GENERIC');
         }
-      }
+      },
     });
   }
 }

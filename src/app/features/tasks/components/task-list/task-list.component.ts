@@ -4,6 +4,7 @@ import { Task } from '../../models/task.model';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../../auth/services/auth.service';
 import { UserRole } from '../../../users/models/user.model';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-task-list',
@@ -14,6 +15,7 @@ import { UserRole } from '../../../users/models/user.model';
 export class TaskListComponent {
   private taskService = inject(TaskService);
   authService = inject(AuthService);
+  translate = inject(TranslateService);
 
   private refreshTrigger = signal(0);
 

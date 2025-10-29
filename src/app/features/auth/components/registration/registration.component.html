@@ -1,75 +1,73 @@
-<h1>Registration Page</h1>
+<h1>{{ 'REGISTRATION_PAGE' | translate }}</h1>
 <form [formGroup]="registrationForm" (ngSubmit)="onRegister()">
     <div class="form-row">
-        <label for="username">Username</label>
-        <input id="username" type="text" formControlName="username" placeholder="Enter username">
+        <label for="username">{{ 'USERNAME' | translate }}</label>
+        <input id="username" type="text" formControlName="username" [placeholder]="'ENTER_USERNAME' | translate">
         <div class="error-container">
             @if (username?.invalid && username?.touched) {
                 @if (username?.hasError('required')) {
-                    <div class="error-msg">Username is required.</div>
+                    <div class="error-msg">{{ 'USERNAME_REQUIRED' | translate }}</div>
                 }
                 @if (username?.hasError('minlength')) {
-                    <div class="error-msg">Username must be at least 3 characters.</div>
+                    <div class="error-msg">{{ 'ERROR_USERNAME_LENGTH' | translate }}</div>
                 }
             }
         </div>
     </div>
 
     <div class="form-row">
-        <label for="firstName">First Name</label>
-        <input id="firstName" type="text" formControlName="firstName" placeholder="Enter first name">
+        <label for="firstName">{{ 'FIRSTNAME' | translate }}</label>
+        <input id="firstName" type="text" formControlName="firstName" [placeholder]="'ENTER_FIRSTNAME' | translate">
         <div class="error-container">
             @if (firstName?.invalid && firstName?.touched) {
-                <div class="error-msg">First name is required.</div>
+                <div class="error-msg">{{ 'FIRSTNAME_REQUIRED' | translate }}</div>
             }
         </div>
     </div>
 
     <div class="form-row">
-        <label for="lastName">Last Name</label>
-        <input id="lastName" type="text" formControlName="lastName" placeholder="Enter last name">
+        <label for="lastName">{{ 'LASTNAME' | translate }}</label>
+        <input id="lastName" type="text" formControlName="lastName" [placeholder]="'ENTER_LASTNAME' | translate">
         <div class="error-container">
             @if (lastName?.invalid && lastName?.touched) {
-                <div class="error-msg">Last name is required.</div>
+                <div class="error-msg">{{ 'LASTNAME_REQUIRED' | translate }}</div>
             }
         </div>
     </div>
 
     <div class="form-row">
-        <label for="password">Password</label>
-        <input id="password" type="password" formControlName="password" placeholder="Enter password">
+        <label for="password">{{ 'PASSWORD' | translate }}</label>
+        <input id="password" type="password" formControlName="password" [placeholder]="'ENTER_PASSWORD' | translate">
         <div class="error-container">
             @if (password?.invalid && password?.touched) {
                 @if (password?.hasError('required')) {
-                    <div class="error-msg">Password is required.</div>
+                    <div class="error-msg">{{ 'PASSWORD_REQUIRED' | translate }}</div>
                 }
                 @if (password?.hasError('minlength')) {
-                    <div class="error-msg">Password must be at least 6 characters.</div>
+                    <div class="error-msg">{{ 'ERROR_PASSWORD_LENGTH' | translate }}</div>
                 }
             }
         </div>
     </div>
 
     <div class="form-row">
-        <label for="confirmPassword">Confirm Password</label>
-        <input id="confirmPassword" type="password" formControlName="confirmPassword" placeholder="Confirm password">
+        <label for="confirmPassword">{{ 'CONFIRM_PASSWORD' | translate }}</label>
+        <input id="confirmPassword" type="password" formControlName="confirmPassword" [placeholder]="'ENTER_CONFIRM_PASSWORD' | translate">
         <div class="error-container">
-            @if (confirmPassword?.invalid && confirmPassword?.touched) {
-                @if (confirmPassword?.hasError('required')) {
-                    <div class="error-msg">Please confirm your password.</div>
-                }
-                @if (confirmPassword?.hasError('passwordMismatch')) {
-                    <div class="error-msg">Passwords do not match.</div>
-                }
+            @if (confirmPassword?.hasError('required') && confirmPassword?.touched) {
+                <div class="error-msg">{{ 'CONFIRM_PASSWORD_REQUIRED' | translate }}</div>
+            }
+            @if (registrationForm.hasError('passwordMismatch') && confirmPassword?.touched) {
+                <div class="error-msg">{{ 'ERROR_PASSWORD_MISMATCH' | translate }}</div>
             }
         </div>
     </div>
 
     @if (registrationError()) {
         <div class="error-container">
-            <div class="error-msg">{{ registrationError() }}</div>
+            <div class="error-msg">{{ registrationError() | translate }}</div>
         </div>
     }
 
-    <button type="submit">Register</button>
+    <button type="submit">{{ 'REGISTER' | translate }}</button>
 </form>
