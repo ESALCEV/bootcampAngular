@@ -7,7 +7,7 @@
         <p i18n="@@taskType"><b>Type:</b> {{ task.type }}</p>
         <p i18n="@@taskStatus"><b>Status:</b> {{ task.status }}</p>
         <p i18n="@@taskAssignedTo"><b>Assigned To:</b> {{ task.assignedTo }}</p>
-        <p i18n="@@taskCreatedOn"><b>Created On:</b> {{ task.createdOn | date }}</p>
+        <p i18n="@@taskCreatedOn"><b>Created On:</b> {{ task.createdOn | date:'d.MM.yyyy' }}</p>
 
         <button (click)="goBack()" i18n="@@backToListBtn">Back to List</button>
         @if (canEdit()) {
