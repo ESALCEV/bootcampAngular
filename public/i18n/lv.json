@@ -19,7 +19,7 @@
   "ERROR_GENERIC": "Izveidojusies kļūda. Lūdzu mēginiet vēlreiz.",
   "ERROR_LOGIN_INVALID_CREDENTIALS": "Nepareizs lietotājvārds vai parole",
   "ERROR_PASSWORD_LENGTH": "Parolei jābūt vismaz 6 rakstzīmju garumā.",
-  "ERROR_PASSWORD_MISMATCH": "Parolēm jasakrīt.",
+  "ERROR_PASSWORD_MISMATCH": "Parolēm jāsakrīt.",
   "ERROR_USERNAME_LENGTH": "Lietotājvārdam jābūt vismaz 3 rakstzīmēm.",
   "ERROR_USERNAME_EXISTS": "Lietotājvārds jau eksistē. Lūdzu, izvēlieties citu.",
   "ERROR_REGISTRATION_INVALID": "Nederīga reģistrācijas informācija.",
