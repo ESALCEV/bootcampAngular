@@ -1,22 +1,35 @@
 <header>
   <div class="logo">
-    <a routerLink="/tasks">Task Application</a>
+    <a routerLink="/tasks">{{ 'TASK_APPLICATION' | translate }}</a>
   </div>
   <nav class="main-nav">
-    <a routerLink="/tasks" routerLinkActive="active-link">Task List</a>
-    @if (authService.currentUser()?.roles?.includes(UserRole.ADMIN)) {
-      <a routerLink="/create" routerLinkActive="active-link">Create Task</a>
-      <a routerLink="/users" routerLinkActive="active-link">User List</a>
+    @if (authService.isLoggedIn()) {
+      <a routerLink="/tasks" routerLinkActive="active-link">{{ 'TASK_LIST' | translate }}</a>
     }
+
+    @if (authService.currentUser()?.roles?.includes(UserRole.ADMIN)) {
+      <a routerLink="/create" routerLinkActive="active-link">{{ 'CREATE_TASK' | translate }}</a>
+      <a routerLink="/users" routerLinkActive="active-link">{{ 'USER_LIST' | translate }}</a>
+    }
+
     @if (authService.isLoggedIn()) {
       <span>
-        Welcome, <b>{{ authService.currentUser()?.firstName }} {{ authService.currentUser()?.lastName }}</b>
+        {{ 'WELCOME' | translate }}, <b>{{ authService.currentUser()?.firstName }} {{ authService.currentUser()?.lastName }}</b>
       </span>
-      <a (click)="authService.logout()">Logout</a>
-    }@else {
-      <a routerLink="/login" routerLinkActive="active-link">Login</a>
-      <a routerLink="/register" routerLinkActive="active-link">Register</a>
+      <a (click)="authService.logout()">{{ 'LOGOUT' | translate }}</a>
+
+    } @else {
+      <a routerLink="/login" routerLinkActive="active-link">{{ 'LOGIN' | translate }}</a>
+      <a routerLink="/register" routerLinkActive="active-link">{{ 'REGISTER' | translate }}</a>
     }
+    
+    <select 
+      (change)="translate.use($any($event.target).value)" 
+      [value]="translate.getCurrentLang()" 
+      class="language-selector">
+      <option value="en">English</option>
+      <option value="lv">Latviešu</option>
+    </select>
   </nav>
 </header>
 
