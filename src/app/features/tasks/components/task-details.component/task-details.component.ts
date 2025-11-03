@@ -68,8 +68,8 @@ export class TaskDetailsComponent {
   canEdit(): boolean {
     const currentUser = this.authService.currentUser();
     return (
-      currentUser?.roles?.includes(UserRole.ADMIN) ||
-      currentUser?.roles?.includes(UserRole.MANAGER) ||
+      currentUser?.roles?.includes(UserRole.ADMIN) ??
+      currentUser?.roles?.includes(UserRole.MANAGER) ??
       false
     );
   }

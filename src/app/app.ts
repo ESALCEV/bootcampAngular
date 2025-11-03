@@ -37,7 +37,7 @@ export class App {
     this.translate.setFallbackLang('en');
 
     if (isPlatformBrowser(this.platformId)) {
-      const savedLang = localStorage.getItem('selectedLanguage') || 'en';
+      const savedLang = localStorage.getItem('selectedLanguage') ?? 'en';
       this.translate.use(savedLang);
     } else {
       this.translate.use('en');
