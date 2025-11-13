@@ -1,26 +1,16 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { UserService } from '../../services/user.service';
-import { rxResource } from '@angular/core/rxjs-interop';
+import { Component, inject } from '@angular/core';
+import { UsersStore } from '../../store/users.store';
 
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.scss',
-  standalone: false
+  standalone: false,
 })
 export class UserListComponent {
-  private userService = inject(UserService);
+  readonly usersStore = inject(UsersStore);
 
-  private refreshTrigger = signal(0);
-
-  usersResource = rxResource({
-    params: () => this.refreshTrigger(),
-    stream: () => this.userService.getUsers(),
-    defaultValue: []
-  });
-
-  users = computed(() => this.usersResource.value());
-  hasValue = computed(() => this.usersResource.hasValue());
-  isLoading = computed(() => this.usersResource.status() === 'loading');
-  hasError = computed(() => this.usersResource.status() === 'error');
+  constructor() {
+    this.usersStore.loadUsers();
+  }
 }

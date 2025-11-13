@@ -64,11 +64,11 @@
     <label for="assignedTo">Assigned To</label>
     <select id="assignedTo" formControlName="assignedTo">
         <option value="UNASSIGNED">Unassigned</option>
-        @for (user of users(); track user.id) {
+        @for (user of usersStore.users(); track user.id) {
             <option [value]="user.id">{{ user.firstName }} {{ user.lastName }} ({{ user.username }})</option>
         }
     </select>
   </div>
 
-  <button class="create-task-btn" type="submit">Create Task</button>
+  <button class="create-task-btn" type="submit" [disabled]="creating$ | async">Create Task</button>
 </form>

@@ -1,50 +1,34 @@
-import { Component, DestroyRef, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UserService } from '../../../users/services/user.service';
-import { User, ASSIGNABLE_ROLES, UserRole } from '../../models/user.model';
-import { EMPTY, switchMap } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ASSIGNABLE_ROLES, UserRole } from '../../models/user.model';
+import { map } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { UsersStore } from '../../store/users.store';
 
 @Component({
   selector: 'app-user-details',
   templateUrl: './user-details.component.html',
   styleUrl: './user-details.component.scss',
-  standalone: false
+  standalone: false,
 })
 export class UserDetailsComponent {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private userService = inject(UserService);
-  private destroyRef = inject(DestroyRef);
+  private userStore = inject(UsersStore);
 
-  user = signal<User | undefined>(undefined);
+  user = computed(() => this.userStore.selectedUser());
   isEditing = signal(false);
   selectedRoles = signal<UserRole[]>([]);
-  errorMsg = signal<string | null>(null);
-  
+  userid = toSignal(this.route.paramMap.pipe(map(params => params.get('id'))));
   assignableRoles = ASSIGNABLE_ROLES;
 
- constructor() {
-    this.route.paramMap.pipe(
-      switchMap(params => {
-        const id = params.get('id');
-        if (!id){
-          this.errorMsg.set('No user ID provided');
-          return EMPTY;
-        } 
-        this.errorMsg.set(null);
-        return this.userService.getUserById(id);
-      }),
-      takeUntilDestroyed()
-    ).subscribe({
-      next: (user) => {
-        this.user.set(user);
-        this.errorMsg.set(null);
-    },
-    error: () => {
-      this.errorMsg.set('Failed to load user details.');
-    }
-  });
+  constructor() {
+    effect(() => {
+      const id = this.userid();
+      if (id) {
+        this.userStore.loadUser(id);
+      }
+    });
 
     effect(() => {
       const currentUser = this.user();
@@ -53,7 +37,7 @@ export class UserDetailsComponent {
       }
     });
   }
-  
+
   isRoleSelected(role: UserRole): boolean {
     return this.selectedRoles().includes(role);
   }
@@ -67,7 +51,7 @@ export class UserDetailsComponent {
       this.selectedRoles.set([...this.selectedRoles(), role]);
     }
 
-    if(!this.selectedRoles().includes(UserRole.USER)) {
+    if (!this.selectedRoles().includes(UserRole.USER)) {
       this.selectedRoles.set([...this.selectedRoles(), UserRole.USER]);
     }
   }
@@ -75,23 +59,16 @@ export class UserDetailsComponent {
   onEditClick(): void {
     this.isEditing.set(true);
   }
-  
+
   onSave(): void {
     const currentUser = this.user();
     if (!currentUser) return;
 
-    this.userService.updateUserRoles(currentUser.username, this.selectedRoles())
-    .pipe(takeUntilDestroyed(this.destroyRef))
-    .subscribe({
-      next: (updatedUser) => {
-        this.user.set(updatedUser);
-        this.isEditing.set(false);
-        this.errorMsg.set(null);
-      },
-      error: () => {
-        this.errorMsg.set('Failed to update user roles.');
-      }
+    this.userStore.updateUserRoles({
+      username: currentUser.username,
+      roles: this.selectedRoles(),
     });
+    this.isEditing.set(false);
   }
 
   onCancel() {

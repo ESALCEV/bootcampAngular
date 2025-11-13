@@ -1,13 +1,12 @@
 <h1>User List</h1>
 <h2>Current Users:</h2>
-@if (isLoading()) {
+@if (usersStore.loading()) {
     <p>Loading users...</p>
     
-}@else if (hasError()) {
+}@else if (usersStore.error()) {
     <p>Error loading users. Please try again.</p>
-
-}@else if (hasValue()) {
-    @for (user of users(); track user.id) {
+}@else { 
+    @for (user of usersStore.users(); track user.id) {
         <div class="user-item">
             <h3>Username: <a [routerLink]="['/users', user.id]">{{ user.username }}</a></h3>
             <p><b>Full name:</b> {{ user.firstName }} {{ user.lastName }}</p>

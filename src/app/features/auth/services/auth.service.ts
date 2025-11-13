@@ -20,7 +20,7 @@ interface RegistrationRequest {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private apiUrl = `${environment.apiUrl}/api/auth`;
@@ -37,29 +37,32 @@ export class AuthService {
 
     if (!this.isBrowser) return;
     const token = localStorage.getItem('token');
-    
+
     if (token) {
       this.isLoggedIn.set(true);
     }
   }
-  
-  initializeUser(): void{
-    if(this.isLoggedIn()){
+
+  initializeUser(): void {
+    if (this.isLoggedIn()) {
       const userId = this.getUserId();
       if (userId) {
-        this.userService.getUserById(userId).pipe(first()).subscribe({
-          next: (user) =>{
-            this.currentUser.set(user);
-          },
-          error: () =>this.logout()
-        });
+        this.userService
+          .getUserById(userId)
+          .pipe(first())
+          .subscribe({
+            next: user => {
+              this.currentUser.set(user);
+            },
+            error: () => this.logout(),
+          });
       } else {
         this.logout();
       }
     }
   }
 
-  login(credentials: {username: string, password: string}): Observable<LoginResponse> {
+  login(credentials: { username: string; password: string }): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials).pipe(
       tap(response => {
         this.handleAuthSuccess(response);
@@ -78,7 +81,7 @@ export class AuthService {
   private handleAuthSuccess(response: LoginResponse): void {
     localStorage.setItem('token', response.token);
     localStorage.setItem('userId', response.user.username);
-    localStorage.setItem('isLoggedIn', 'true')
+    localStorage.setItem('isLoggedIn', 'true');
 
     this.isLoggedIn.set(true);
     this.currentUser.set(response.user);
@@ -94,7 +97,7 @@ export class AuthService {
       },
       error: () => {
         this.clearStorage();
-      }
+      },
     });
   }
 
@@ -110,14 +113,14 @@ export class AuthService {
   }
 
   getUserId(): string | null {
-    if(this.isBrowser){
+    if (this.isBrowser) {
       return localStorage.getItem('userId');
     }
     return null;
   }
 
   getAuthToken(): string | null {
-    if(this.isBrowser) {
+    if (this.isBrowser) {
       return localStorage.getItem('token');
     }
     return null;
