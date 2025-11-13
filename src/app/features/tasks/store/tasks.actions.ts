@@ -45,7 +45,7 @@ export const createTaskFailure = createAction(
   props<{ error: string }>()
 );
 
-//Update tasks
+//Update task
 export const updateTask = createAction('[Tasks] Update Task', props<{ task: Task }>());
 export const updateTaskSuccess = createAction(
   '[Tasks] Update Task Success',
