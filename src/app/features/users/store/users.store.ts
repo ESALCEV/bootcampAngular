@@ -3,7 +3,7 @@ import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { UserService } from '../services/user.service';
 import { pipe, switchMap, tap } from 'rxjs';
-import { computed, inject } from '@angular/core';
+import { inject } from '@angular/core';
 
 interface UsersState {
   users: User[];
