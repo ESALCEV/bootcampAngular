@@ -20,7 +20,7 @@ export const loadTaskFailure = createAction(
   props<{ error: string }>()
 );
 
-//Delete tasks
+//Delete task
 export const deleteTask = createAction('[Tasks] Delete Task', props<{ id: string }>());
 export const deleteTaskSuccess = createAction(
   '[Tasks] Delete Task Success',
