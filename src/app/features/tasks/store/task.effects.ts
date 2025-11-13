@@ -63,13 +63,6 @@ export class TasksEffects {
     )
   );
 
-  deleteTaskSuccess$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(deleteTaskSuccess),
-      map(() => loadTasks())
-    )
-  );
-
   createTask$ = createEffect(() =>
     this.actions$.pipe(
       ofType(createTask),
