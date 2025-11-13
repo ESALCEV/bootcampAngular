@@ -31,7 +31,7 @@ export const deleteTaskFailure = createAction(
   props<{ error: string }>()
 );
 
-//Create tasks
+//Create task
 export const createTask = createAction(
   '[Tasks] Create Task',
   props<{ task: Omit<Task, 'id' | 'createdOn'> }>()
