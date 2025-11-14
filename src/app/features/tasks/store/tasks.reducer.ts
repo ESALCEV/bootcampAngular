@@ -13,6 +13,7 @@ import {
   loadTasksFailure,
   loadTasksSuccess,
   loadTaskSuccess,
+  setEditMode,
   updateTask,
   updateTaskFailure,
   updateTaskSuccess,
@@ -26,6 +27,7 @@ export interface TaskState {
   deleting: boolean;
   creating: boolean;
   updating: boolean;
+  isEditing: boolean;
 }
 
 const initialState: TaskState = {
@@ -36,6 +38,7 @@ const initialState: TaskState = {
   deleting: false,
   creating: false,
   updating: false,
+  isEditing: false,
 };
 
 export const taskReducer = createReducer(
@@ -50,6 +53,9 @@ export const taskReducer = createReducer(
   on(loadTask, state => ({ ...state, loading: true, error: null })),
   on(loadTaskSuccess, (state, { task }) => ({ ...state, selectedTask: task, loading: false })),
   on(loadTaskFailure, (state, { error }) => ({ ...state, error, loading: false })),
+
+  //Edit mode
+  on(setEditMode, (state, { isEditing }) => ({ ...state, isEditing })),
 
   //Delete task
   on(deleteTask, state => ({ ...state, deleting: true, error: null })),
@@ -87,6 +93,7 @@ export const taskReducer = createReducer(
     selectedTask: task,
     updating: false,
     error: null,
+    isEditing: false,
   })),
   on(updateTaskFailure, (state, { error }) => ({
     ...state,

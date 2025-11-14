@@ -14,10 +14,11 @@ import { UsersStore } from '../../store/users.store';
 export class UserDetailsComponent {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private userStore = inject(UsersStore);
+  protected userStore = inject(UsersStore);
 
   user = computed(() => this.userStore.selectedUser());
-  isEditing = signal(false);
+  isEditing = computed(() => this.userStore.isEditing());
+  updating = computed(() => this.userStore.updating());
   selectedRoles = signal<UserRole[]>([]);
   userid = toSignal(this.route.paramMap.pipe(map(params => params.get('id'))));
   assignableRoles = ASSIGNABLE_ROLES;
@@ -57,7 +58,7 @@ export class UserDetailsComponent {
   }
 
   onEditClick(): void {
-    this.isEditing.set(true);
+    this.userStore.setEditMode(true);
   }
 
   onSave(): void {
@@ -68,7 +69,6 @@ export class UserDetailsComponent {
       username: currentUser.username,
       roles: this.selectedRoles(),
     });
-    this.isEditing.set(false);
   }
 
   onCancel() {
@@ -76,7 +76,7 @@ export class UserDetailsComponent {
     if (currentUser) {
       this.selectedRoles.set([...currentUser.roles]);
     }
-    this.isEditing.set(false);
+    this.userStore.setEditMode(false);
   }
 
   goBack(): void {

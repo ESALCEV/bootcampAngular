@@ -1,11 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Task, TASK_STATUSES, TASK_TYPES, UNASSIGNED } from '../../models/task.model';
-import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectCreatingTask, selectTasksError } from '../../store/task.selectors';
 import { createTask } from '../../store/tasks.actions';
 import { UsersStore } from '../../../users/store/users.store';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-create-task',
@@ -23,11 +23,11 @@ export class CreateTaskComponent {
   statuses = TASK_STATUSES;
   types = TASK_TYPES;
 
-  creating$: Observable<boolean> = this.store.select(selectCreatingTask);
-  error$: Observable<string | null> = this.store.select(selectTasksError);
+  creating = toSignal(this.store.select(selectCreatingTask));
+  error = toSignal(this.store.select(selectTasksError));
 
   constructor() {
-    this.usersStore.loadUsers();
+    this.usersStore.loadUsersIfNeeded();
 
     this.taskForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3)]],

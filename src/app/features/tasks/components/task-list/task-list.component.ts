@@ -1,9 +1,7 @@
 import { Component, inject } from '@angular/core';
-import { Task } from '../../models/task.model';
 import { AuthService } from '../../../auth/services/auth.service';
 import { UserRole } from '../../../users/models/user.model';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import {
   selectAllTasks,
@@ -12,6 +10,7 @@ import {
   selectTasksError,
 } from '../../store/task.selectors';
 import { deleteTask, loadTasks } from '../../store/tasks.actions';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-task-list',
@@ -24,10 +23,10 @@ export class TaskListComponent {
   authService = inject(AuthService);
   translate = inject(TranslateService);
 
-  tasks$: Observable<Task[]> = this.store.select(selectAllTasks);
-  loading$ = this.store.select(selectLoadingTasks);
-  error$ = this.store.select(selectTasksError);
-  deleting$ = this.store.select(selectDeletingTask);
+  tasks = toSignal(this.store.select(selectAllTasks), { initialValue: [] });
+  loading = toSignal(this.store.select(selectLoadingTasks));
+  error = toSignal(this.store.select(selectTasksError));
+  deleting = toSignal(this.store.select(selectDeletingTask));
 
   constructor() {
     this.store.dispatch(loadTasks());

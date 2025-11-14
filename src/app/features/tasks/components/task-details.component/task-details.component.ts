@@ -1,14 +1,19 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map, Observable } from 'rxjs';
+import { map } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Task, TASK_STATUSES, TASK_TYPES, UNASSIGNED } from '../../models/task.model';
 import { AuthService } from '../../../auth/services/auth.service';
 import { UserRole } from '../../../users/models/user.model';
 import { Store } from '@ngrx/store';
-import { selectSelectedTask, selectUpdatingTask } from '../../store/task.selectors';
-import { loadTask, updateTask } from '../../store/tasks.actions';
+import {
+  selectisEditing,
+  selectLoadingTask,
+  selectSelectedTask,
+  selectUpdatingTask,
+} from '../../store/task.selectors';
+import { loadTask, setEditMode, updateTask } from '../../store/tasks.actions';
 import { UsersStore } from '../../../users/store/users.store';
 
 @Component({
@@ -25,10 +30,11 @@ export class TaskDetailsComponent {
   private authService = inject(AuthService);
   private store = inject(Store);
 
-  isEditing = signal(false);
+  isEditing = toSignal(this.store.select(selectisEditing));
 
   task = toSignal(this.store.select(selectSelectedTask));
-  updating$: Observable<boolean> = this.store.select(selectUpdatingTask);
+  updating = toSignal(this.store.select(selectUpdatingTask));
+  loading = toSignal(this.store.select(selectLoadingTask));
 
   taskForm: FormGroup;
   types = TASK_TYPES;
@@ -82,10 +88,10 @@ export class TaskDetailsComponent {
   }
 
   onEditClick() {
-    this.isEditing.set(true);
+    this.store.dispatch(setEditMode({ isEditing: true }));
 
     if (this.canEdit()) {
-      this.usersStore.loadUsers();
+      this.usersStore.loadUsersIfNeeded();
     }
   }
 
@@ -101,7 +107,6 @@ export class TaskDetailsComponent {
     }
     const updatedTask: Task = { ...currentTask, ...this.taskForm.value };
     this.store.dispatch(updateTask({ task: updatedTask }));
-    this.isEditing.set(false);
   }
 
   onCancel() {
@@ -109,7 +114,7 @@ export class TaskDetailsComponent {
     if (currentTask) {
       this.populateForm(currentTask);
     }
-    this.isEditing.set(false);
+    this.store.dispatch(setEditMode({ isEditing: false }));
   }
 
   goBack(): void {

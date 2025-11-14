@@ -31,6 +31,9 @@ export const deleteTaskFailure = createAction(
   props<{ error: string }>()
 );
 
+//Edit mode
+export const setEditMode = createAction('[Tasks] Set Edit Mode', props<{ isEditing: boolean }>());
+
 //Create task
 export const createTask = createAction(
   '[Tasks] Create Task',

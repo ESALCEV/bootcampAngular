@@ -11,6 +11,6 @@ export class UserListComponent {
   readonly usersStore = inject(UsersStore);
 
   constructor() {
-    this.usersStore.loadUsers();
+    this.usersStore.loadUsersIfNeeded();
   }
 }
