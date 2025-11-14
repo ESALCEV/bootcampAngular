@@ -2,7 +2,7 @@
 <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
     <div class="form-row">
         <label for="username">{{ 'USERNAME' | translate }}</label>
-        <input id="username" type="text" formControlName="username" [placeholder]="'ENTER_USERNAME' | translate">
+        <input id="username" type="text" formControlName="username" [placeholder]="'ENTER_USERNAME' | translate" autocomplete="username">
         <div class="error-container">
            @if (username?.invalid && username?.touched) {
                 <div class="error-msg">{{ 'USERNAME_REQUIRED' | translate }}</div>

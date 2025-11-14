@@ -26,7 +26,7 @@
     <select 
       (change)="translate.use($any($event.target).value)" 
       [value]="translate.getCurrentLang()" 
-      class="language-selector">
+      class="language-selector" id="language">
       <option value="en">English</option>
       <option value="lv">Latviešu</option>
     </select>

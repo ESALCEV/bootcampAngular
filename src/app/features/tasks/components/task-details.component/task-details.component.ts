@@ -1,13 +1,20 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TaskService } from '../../services/task.service';
 import { map } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { UserService } from '../../../users/services/user.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Task, TASK_STATUSES, TASK_TYPES, UNASSIGNED } from '../../models/task.model';
 import { AuthService } from '../../../auth/services/auth.service';
-import { User, UserRole } from '../../../users/models/user.model';
+import { UserRole } from '../../../users/models/user.model';
+import { Store } from '@ngrx/store';
+import {
+  selectisEditing,
+  selectLoadingTask,
+  selectSelectedTask,
+  selectUpdatingTask,
+} from '../../store/task.selectors';
+import { loadTask, setEditMode, updateTask } from '../../store/tasks.actions';
+import { UsersStore } from '../../../users/store/users.store';
 
 @Component({
   selector: 'app-task-details',
@@ -18,15 +25,16 @@ import { User, UserRole } from '../../../users/models/user.model';
 export class TaskDetailsComponent {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private taskService = inject(TaskService);
-  private userService = inject(UserService);
+  protected usersStore = inject(UsersStore);
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
+  private store = inject(Store);
 
-  users = signal<User[]>([]);
-  isEditing = signal(false);
+  isEditing = toSignal(this.store.select(selectisEditing));
 
-  task = signal<Task | undefined>(undefined);
+  task = toSignal(this.store.select(selectSelectedTask));
+  updating = toSignal(this.store.select(selectUpdatingTask));
+  loading = toSignal(this.store.select(selectLoadingTask));
 
   taskForm: FormGroup;
   types = TASK_TYPES;
@@ -44,43 +52,46 @@ export class TaskDetailsComponent {
     });
     effect(() => {
       const id = this.taskId();
+      if (id) {
+        this.store.dispatch(loadTask({ id }));
+      }
+    });
+
+    effect(() => {
+      const fetchedTask = this.task();
       const currentUser = this.authService.currentUser();
 
-      if (id) {
-        this.taskService.getTaskbyId(id).subscribe(fetchedTask => {
-          this.task.set(fetchedTask);
-          this.populateForm(fetchedTask);
+      if (fetchedTask) {
+        this.populateForm(fetchedTask);
 
-          if (
-            currentUser?.roles.includes(UserRole.MANAGER) &&
-            !currentUser.roles.includes(UserRole.ADMIN)
-          ) {
-            this.taskForm.get('title')?.disable();
-            this.taskForm.get('description')?.disable();
-            this.taskForm.get('type')?.disable();
-            this.taskForm.get('status')?.disable();
-          }
-        });
+        if (
+          currentUser?.roles.includes(UserRole.MANAGER) &&
+          !currentUser.roles.includes(UserRole.ADMIN)
+        ) {
+          this.taskForm.get('title')?.disable();
+          this.taskForm.get('description')?.disable();
+          this.taskForm.get('type')?.disable();
+          this.taskForm.get('status')?.disable();
+        }
       }
     });
   }
 
   canEdit(): boolean {
     const currentUser = this.authService.currentUser();
+    if (!currentUser) {
+      return false;
+    }
     return (
-      currentUser?.roles?.includes(UserRole.ADMIN) ??
-      currentUser?.roles?.includes(UserRole.MANAGER) ??
-      false
+      currentUser.roles.includes(UserRole.ADMIN) || currentUser.roles.includes(UserRole.MANAGER)
     );
   }
 
   onEditClick() {
-    this.isEditing.set(true);
+    this.store.dispatch(setEditMode({ isEditing: true }));
 
     if (this.canEdit()) {
-      this.userService.getUsers().subscribe(users => {
-        this.users.set(users);
-      });
+      this.usersStore.loadUsersIfNeeded();
     }
   }
 
@@ -91,17 +102,11 @@ export class TaskDetailsComponent {
     }
 
     const currentTask = this.task();
-    if (!currentTask) return;
-
+    if (!currentTask) {
+      return;
+    }
     const updatedTask: Task = { ...currentTask, ...this.taskForm.value };
-
-    this.taskService.updateTask(updatedTask).subscribe({
-      next: () => {
-        this.isEditing.set(false);
-        this.task.set(updatedTask);
-      },
-      error: err => console.error('Error updating task:', err),
-    });
+    this.store.dispatch(updateTask({ task: updatedTask }));
   }
 
   onCancel() {
@@ -109,7 +114,7 @@ export class TaskDetailsComponent {
     if (currentTask) {
       this.populateForm(currentTask);
     }
-    this.isEditing.set(false);
+    this.store.dispatch(setEditMode({ isEditing: false }));
   }
 
   goBack(): void {

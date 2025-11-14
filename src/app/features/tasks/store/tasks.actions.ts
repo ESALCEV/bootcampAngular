@@ -1,0 +1,60 @@
+import { createAction, props } from '@ngrx/store';
+import { Task } from '../models/task.model';
+
+//Load tasks
+export const loadTasks = createAction('[Tasks] Load Tasks');
+export const loadTasksSuccess = createAction(
+  '[Tasks] Load Tasks Success',
+  props<{ tasks: Task[] }>()
+);
+export const loadTasksFailure = createAction(
+  '[Tasks] Load Tasks Failure',
+  props<{ error: string }>()
+);
+
+//Load single task
+export const loadTask = createAction('[Tasks] Load Task', props<{ id: string }>());
+export const loadTaskSuccess = createAction('[Tasks] Load Task Success', props<{ task: Task }>());
+export const loadTaskFailure = createAction(
+  '[Tasks] Load Task Failure',
+  props<{ error: string }>()
+);
+
+//Delete task
+export const deleteTask = createAction('[Tasks] Delete Task', props<{ id: string }>());
+export const deleteTaskSuccess = createAction(
+  '[Tasks] Delete Task Success',
+  props<{ id: string }>()
+);
+export const deleteTaskFailure = createAction(
+  '[Tasks] Delete Task Failure',
+  props<{ error: string }>()
+);
+
+//Edit mode
+export const setEditMode = createAction('[Tasks] Set Edit Mode', props<{ isEditing: boolean }>());
+
+//Create task
+export const createTask = createAction(
+  '[Tasks] Create Task',
+  props<{ task: Omit<Task, 'id' | 'createdOn'> }>()
+);
+export const createTaskSuccess = createAction(
+  '[Tasks] Create Task Success',
+  props<{ task: Task }>()
+);
+export const createTaskFailure = createAction(
+  '[Tasks] Create Task Failure',
+  props<{ error: string }>()
+);
+
+//Update task
+export const updateTask = createAction('[Tasks] Update Task', props<{ task: Task }>());
+export const updateTaskSuccess = createAction(
+  '[Tasks] Update Task Success',
+  props<{ task: Task }>()
+);
+export const updateTaskFailure = createAction(
+  '[Tasks] Update Task Failure',
+  props<{ error: string }>()
+);

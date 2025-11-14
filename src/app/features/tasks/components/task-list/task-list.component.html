@@ -1,13 +1,12 @@
 <h1>{{ 'TASK_LIST' | translate }}</h1>
 <h2>{{ 'CURRENT_TASKS' | translate }}</h2>
-@if (isLoading()){
+@if (loading()){
   <p>{{ 'LOADING_TASKS' | translate }}</p>
 
-} @else if (hasError()) {
+} @else if (error()) {
   <p>{{ 'ERROR_LOADING_TASKS' | translate }}</p>
 
-} @else if (hasValue()) {
-
+} @else {
   @for (task of tasks(); track task.id) {
     <div class="task-item"> 
       <h3><a [routerLink]="['/tasks', task.id]">{{ task.title }}</a></h3>
@@ -16,7 +15,7 @@
       <p><b>{{ 'ASSIGNED_TO' | translate }}</b> {{ task.assignedTo }}</p>
 
       @if (isAdmin()){
-        <button (click)="deleteTask(task.id)">{{ 'DELETE' | translate }}</button>
+        <button (click)="deleteTask(task.id)" [disabled]="deleting()">{{ 'DELETE' | translate }}</button>
       }
     </div>
 
