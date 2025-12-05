@@ -1,9 +1,9 @@
 import { User, UserRole } from '../models/user.model';
-import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
+import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { UserService } from '../services/user.service';
 import { catchError, EMPTY, pipe, switchMap, tap } from 'rxjs';
-import { inject } from '@angular/core';
+import { computed, inject } from '@angular/core';
 
 interface UsersState {
   users: User[];
@@ -26,6 +26,12 @@ const initialState: UsersState = {
 export const UsersStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
+
+  withMethods((store) => ({
+    getUsersByIds(userIds: string[]) {
+      return store.users().filter(u => userIds.includes(u.id));
+    },
+  })),
 
   withMethods((store, userService = inject(UserService)) => ({
     loadUsers: rxMethod<void>(

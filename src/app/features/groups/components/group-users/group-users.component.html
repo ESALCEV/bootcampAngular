@@ -1,0 +1,53 @@
+<div>
+  <h3>Assigned Users</h3>
+
+  @if (groupStore.loadingUsers()) {
+    <p>Loading users...</p>
+  } @else if (groupStore.groupUserIds().length === 0) {
+    <p>No users assigned to this group yet.</p>
+  } @else {
+    <div >
+      @for (username of groupStore.groupUserIds(); track username) {
+        <div >
+          <span >{{ username }}</span>
+          <button 
+            class="create-task-btn"
+            type="button"
+            (click)="onRemoveUser(username)"
+            [disabled]="groupStore.loadingUsers()">
+            Remove
+          </button>
+        </div>
+      }
+    </div>
+  }
+
+  <div>
+    <h4>Add User to Group</h4>
+    @if (availableUsers().length > 0) {
+      <div>
+        <select [formControl]="selectedUsername">
+          <option value="">Select a user...</option>
+          @for (user of availableUsers(); track user.username) {
+            <option [value]="user.username">
+              {{ user.username }} ({{ user.firstName }} {{ user.lastName }})
+            </option>
+          }
+        </select>
+        <button 
+          class="create-task-btn"
+          type="button"
+          (click)="onAssignUser()"
+          [disabled]="!selectedUsername.value || groupStore.loadingUsers()">
+          Assign
+        </button>
+      </div>
+    } @else {
+      <p>All users are already assigned to this group.</p>
+    }
+  </div>
+
+  @if (groupStore.error()) {
+    <div class="error-msg">{{ groupStore.error() }}</div>
+  }
+</div>

@@ -9,6 +9,8 @@ import { RegistrationComponent } from './features/auth/components/registration/r
 import { UserDetailsComponent } from './features/users/components/user-details/user-details.component';
 import { adminGuard } from './features/auth/guards/admin.guard';
 import { guestGuard } from './features/auth/guards/guest.guard';
+import { GroupListComponent } from './features/groups/components/group-list/group-list.component';
+import { GroupDetailsComponent } from './features/groups/components/group-details/group-details.component';
 
 export const routes: Routes = [
   {
@@ -50,5 +52,20 @@ export const routes: Routes = [
     path: 'register',
     component: RegistrationComponent,
     canActivate: [guestGuard],
+  },
+  {
+    path: 'groups',
+    component: GroupListComponent,
+    canActivate: [authGuard, adminGuard],
+  },
+  {
+    path: 'groups/create',
+    component: GroupDetailsComponent,
+    canActivate: [authGuard, adminGuard],
+  },
+  {
+    path: 'groups/:id',
+    component: GroupDetailsComponent,
+    canActivate: [authGuard, adminGuard],
   },
 ];

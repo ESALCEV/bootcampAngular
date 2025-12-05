@@ -1,0 +1,36 @@
+<h1>{{ group() ? 'Edit Group' : 'Create Group' }}</h1>
+@if (store.loading()) {
+  <p>Loading group details...</p>
+}@else {
+  <form [formGroup]="groupForm" (ngSubmit)="onSubmit()">
+    <div class="form-row">
+      <label for="name">Name: </label>
+      <input id="name" type="text" formControlName="name">
+      
+      <div class="error-container">
+        @if (name?.invalid && name?.touched) {
+          @if (name?.hasError('required')) {
+            <div class="error-msg">Name is required</div>
+          }
+          @if (name?.hasError('minlength')) {
+            <div class="error-msg">Name must be at least 3 characters long.</div>
+          }
+        }
+      </div>
+    </div>
+
+    <div class="form-row">
+      <label for="description">Description: </label>
+      <textarea id="description" formControlName="description"></textarea>
+    </div>
+
+    <div>
+      <button class="create-task-btn" type="button" routerLink="/groups">Back</button>
+      <button class="create-task-btn" type="submit" [disabled]="store.loading()">{{ group() ? 'Update' : 'Create' }}</button>
+    </div>
+  </form>
+
+  @if (group()) {
+    <app-group-users [groupId]="group()!.id"></app-group-users>
+  }
+}

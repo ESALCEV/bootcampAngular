@@ -32,4 +32,5 @@ export interface Task {
     status: TaskStatus;
     createdOn: Date;
     assignedTo: string;
+    groupId: string;
 }

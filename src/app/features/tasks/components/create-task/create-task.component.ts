@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Task, TASK_STATUSES, TASK_TYPES, UNASSIGNED } from '../../models/task.model';
 import { Store } from '@ngrx/store';
@@ -6,6 +6,7 @@ import { selectCreatingTask, selectTasksError } from '../../store/task.selectors
 import { createTask } from '../../store/tasks.actions';
 import { UsersStore } from '../../../users/store/users.store';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { GroupService } from '../../../groups/services/group.service';
 
 @Component({
   selector: 'app-create-task',
@@ -17,8 +18,20 @@ export class CreateTaskComponent {
   protected usersStore = inject(UsersStore);
   private store = inject(Store);
   private fb = inject(FormBuilder);
+  private groupService = inject(GroupService);
 
-  taskForm: FormGroup;
+  userGroups = toSignal(this.groupService.getAllGroups());
+
+  taskForm = this.fb.group({
+    title: ['', [Validators.required, Validators.minLength(3)]],
+    description: [''],
+    type: ['', Validators.required],
+    status: ['', Validators.required],
+    assignedTo: [UNASSIGNED, Validators.required],
+    groupId: ['', Validators.required],
+  });
+
+  selectedGroupId = toSignal(this.taskForm.controls['groupId'].valueChanges, { initialValue: '' });
 
   statuses = TASK_STATUSES;
   types = TASK_TYPES;
@@ -28,15 +41,19 @@ export class CreateTaskComponent {
 
   constructor() {
     this.usersStore.loadUsersIfNeeded();
-
-    this.taskForm = this.fb.group({
-      title: ['', [Validators.required, Validators.minLength(3)]],
-      description: [''],
-      type: ['', Validators.required],
-      status: ['', Validators.required],
-      assignedTo: [UNASSIGNED, Validators.required],
-    });
   }
+
+  filteredUsers = computed(() => {
+    const groupId = this.selectedGroupId();
+    const groups = this.userGroups();
+
+    const selectedGroup = groups?.find(g => g.id === groupId);
+    if (!selectedGroup) {
+      return this.usersStore.users();
+    }
+
+    return this.usersStore.getUsersByIds(selectedGroup.userIds);
+  });
 
   get title() {
     return this.taskForm.get('title');
@@ -54,6 +71,14 @@ export class CreateTaskComponent {
     return this.taskForm.get('assignedTo');
   }
 
+  get groupId() {
+    return this.taskForm.get('groupId');
+  }
+
+  getUserGroups() {
+    return this.userGroups();
+  }
+
   onSubmit(): void {
     if (this.taskForm.invalid) {
       this.taskForm.markAllAsTouched();
@@ -61,11 +86,12 @@ export class CreateTaskComponent {
     }
 
     const newTask: Omit<Task, 'id' | 'createdOn'> = {
-      title: this.taskForm.value.title,
-      description: this.taskForm.value.description,
-      status: this.taskForm.value.status,
-      type: this.taskForm.value.type,
-      assignedTo: this.taskForm.value.assignedTo,
+      title: this.taskForm.value.title!,
+      description: this.taskForm.value.description || '',
+      status: this.taskForm.value.status as any,
+      type: this.taskForm.value.type as any,
+      assignedTo: this.taskForm.value.assignedTo!,
+      groupId: this.taskForm.value.groupId!,
     };
 
     this.store.dispatch(createTask({ task: newTask }));
