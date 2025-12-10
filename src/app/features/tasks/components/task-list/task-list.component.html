@@ -13,6 +13,7 @@
       <p><b>{{ 'DESCRIPTION' | translate }}</b> {{ task.description }}</p>
       <p>{{ 'STATUS' | translate }} {{ task.status }} | {{ 'TYPE' | translate }} {{ task.type }} | {{ 'CREATED_ON' | translate }} {{ task.createdOn | date:'d.MM.yyyy' }}</p>
       <p><b>{{ 'ASSIGNED_TO' | translate }}</b> {{ task.assignedTo }}</p>
+      <p><b>{{ 'GROUP' | translate }}</b> {{ getGroupName(task.groupId) }}</p>
 
       @if (isAdmin()){
         <button (click)="deleteTask(task.id)" [disabled]="deleting()">{{ 'DELETE' | translate }}</button>

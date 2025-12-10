@@ -1,0 +1,39 @@
+<h1>Groups</h1>
+<div class="actions">
+  <button routerLink="/groups/create">Create Group</button>
+</div>
+
+<h2>Current Groups:</h2>
+@if (store.loading()) {
+  <p>Loading groups...</p>
+
+} @else if (store.error()) {
+  <p>{{ store.error() }}</p>
+
+} @else {
+  <div>
+    @for (group of store.groups(); track group.id) {
+      <div>
+        <div>
+          <h3>{{ group.name }}</h3>
+          <p><b>Description:</b> {{ group.description }}</p>
+          @if (group.userIds && group.userIds.length > 0) {
+            <p><b>Assigned Users:</b></p>
+            <div>
+              @for (username of group.userIds; track username) {
+                <span class="user-tag">{{ username }}</span>
+              }
+            </div>
+          } @else {
+            <p><i>No users assigned</i></p>
+          }
+        </div>
+
+        <button class="create-task-btn" (click)="deleteGroup(group.id)">Delete</button>
+        <button class="create-task-btn" [routerLink]="['/groups', group.id]">Edit</button>
+      </div>
+    } @empty {
+      <p>No groups found</p>
+    }
+  </div>
+}

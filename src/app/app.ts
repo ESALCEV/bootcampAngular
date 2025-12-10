@@ -5,6 +5,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { TasksModule } from './features/tasks/tasks-module';
 import { UsersModule } from './features/users/users-module';
 import { AuthModule } from './features/auth/auth-module';
+import { GroupModule } from './features/groups/group-module';
 import { AuthService } from './features/auth/services/auth.service';
 import { UserRole } from './features/users/models/user.model';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -18,6 +19,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
     CommonModule,
     UsersModule,
     AuthModule,
+    GroupModule,
     TranslateModule,
   ],
   templateUrl: './app.html',

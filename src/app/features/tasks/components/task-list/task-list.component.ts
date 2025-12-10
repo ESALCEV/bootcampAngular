@@ -11,6 +11,7 @@ import {
 } from '../../store/task.selectors';
 import { deleteTask, loadTasks } from '../../store/tasks.actions';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { GroupService } from '../../../groups/services/group.service';
 
 @Component({
   selector: 'app-task-list',
@@ -22,6 +23,9 @@ export class TaskListComponent {
   private store = inject(Store);
   authService = inject(AuthService);
   translate = inject(TranslateService);
+  groupService = inject(GroupService);
+
+  groups = toSignal(this.groupService.getAllGroups(), { initialValue: [] });
 
   tasks = toSignal(this.store.select(selectAllTasks), { initialValue: [] });
   loading = toSignal(this.store.select(selectLoadingTasks));
@@ -38,5 +42,10 @@ export class TaskListComponent {
 
   deleteTask(taskId: string): void {
     this.store.dispatch(deleteTask({ id: taskId }));
+  }
+
+  getGroupName(groupId: string): string {
+    const group = this.groups().find(g => g.id === groupId);
+    return group?.name ?? 'Unknown Group';
   }
 }

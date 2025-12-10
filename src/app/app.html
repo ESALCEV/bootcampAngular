@@ -10,6 +10,7 @@
     @if (authService.currentUser()?.roles?.includes(UserRole.ADMIN)) {
       <a routerLink="/create" routerLinkActive="active-link">{{ 'CREATE_TASK' | translate }}</a>
       <a routerLink="/users" routerLinkActive="active-link">{{ 'USER_LIST' | translate }}</a>
+      <a routerLink="/groups" routerLinkActive="active-link">Groups</a>
     }
 
     @if (authService.isLoggedIn()) {
