@@ -15,7 +15,7 @@ export class GroupListComponent {
   }
 
   deleteGroup(id: string) {
-    if (confirm('Are you sure you want to delte this group?')) {
+    if (confirm('Are you sure you want to delete this group?')) {
       this.store.deleteGroup(id);
     }
   }

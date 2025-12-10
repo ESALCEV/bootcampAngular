@@ -1,6 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Task, TASK_STATUSES, TASK_TYPES, UNASSIGNED } from '../../models/task.model';
+import { FormBuilder, Validators } from '@angular/forms';
+import { Task, TASK_STATUSES, TASK_TYPES, TaskStatus, TaskType, UNASSIGNED } from '../../models/task.model';
 import { Store } from '@ngrx/store';
 import { selectCreatingTask, selectTasksError } from '../../store/task.selectors';
 import { createTask } from '../../store/tasks.actions';
@@ -86,12 +86,12 @@ export class CreateTaskComponent {
     }
 
     const newTask: Omit<Task, 'id' | 'createdOn'> = {
-      title: this.taskForm.value.title!,
-      description: this.taskForm.value.description || '',
-      status: this.taskForm.value.status as any,
-      type: this.taskForm.value.type as any,
-      assignedTo: this.taskForm.value.assignedTo!,
-      groupId: this.taskForm.value.groupId!,
+      title: this.taskForm.value.title ?? '',
+      description: this.taskForm.value.description ?? '',
+      status: this.taskForm.value.status as TaskStatus,
+      type: this.taskForm.value.type as TaskType,
+      assignedTo: this.taskForm.value.assignedTo ?? UNASSIGNED,
+      groupId: this.taskForm.value.groupId ?? '',
     };
 
     this.store.dispatch(createTask({ task: newTask }));

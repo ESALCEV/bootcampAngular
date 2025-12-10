@@ -2,8 +2,8 @@ import { Component, computed, effect, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Task, TASK_STATUSES, TASK_TYPES, UNASSIGNED } from '../../models/task.model';
+import { FormBuilder, Validators } from '@angular/forms';
+import { Task, TASK_STATUSES, TASK_TYPES, TaskStatus, TaskType, UNASSIGNED } from '../../models/task.model';
 import { AuthService } from '../../../auth/services/auth.service';
 import { UserRole } from '../../../users/models/user.model';
 import { Store } from '@ngrx/store';
@@ -145,12 +145,12 @@ export class TaskDetailsComponent {
     
     const updatedTask: Task = { 
       ...currentTask, 
-      title: formValues.title!,
-      description: formValues.description || '',
-      type: formValues.type as any,
-      status: formValues.status as any,
-      assignedTo: formValues.assignedTo!,
-      groupId: formValues.groupId!
+      title: formValues.title ?? currentTask.title,
+      description: formValues.description ?? '',
+      type: formValues.type as TaskType,
+      status: formValues.status as TaskStatus,
+      assignedTo: formValues.assignedTo ?? UNASSIGNED,
+      groupId: formValues.groupId ?? currentTask.groupId
     };
     this.store.dispatch(updateTask({ task: updatedTask }));
   }
@@ -173,6 +173,6 @@ export class TaskDetailsComponent {
 
   getGroupName(groupId: string): string {
     const group = this.groups()?.find(g => g.id === groupId);
-    return group?.name || 'Unknown Group';
+    return group?.name ?? 'Unknown Group';
   }
 }

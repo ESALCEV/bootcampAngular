@@ -30,7 +30,7 @@
     </div>
   </form>
 
-  @if (group()) {
-    <app-group-users [groupId]="group()!.id"></app-group-users>
+  @if (group(); as currentGroup) {
+    <app-group-users [groupId]="currentGroup.id"></app-group-users>
   }
 }

@@ -24,16 +24,13 @@ export class GroupUsersComponent {
     return allUsers.filter(user => !assignedUserIds.includes(user.username));
   });
 
-  constructor() {
-    this.usersStore.loadUsers();
-
-    effect(() => {
-      const id = this.groupId();
-      if (id) {
-        this.groupStore.loadGroupUsers(id);
-      }
-    });
-  }
+  loadGroupUsersEffect = effect(() => {
+    const id = this.groupId();
+    if (id) {
+      this.usersStore.loadUsers();
+      this.groupStore.loadGroupUsers(id);
+    }
+  });
 
   onAssignUser() {
     const username = this.selectedUsername.value;

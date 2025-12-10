@@ -17,38 +17,35 @@ export class GroupDetailsComponent {
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
 
-  groupForm: FormGroup;
+  groupForm: FormGroup = this.fb.group({
+    name: ['', [Validators.required, Validators.minLength(3)]],
+    description: [''],
+  });
   
   group = computed(() => this.store.selectedGroup());
   
   groupId = toSignal(this.route.paramMap.pipe(map(params => params.get('id'))));
 
-  constructor() {
-    this.groupForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(3)]],
-      description: [''],
-    });
 
-    effect(() => {
-      const id = this.groupId();
-      if (id) {
-        this.store.loadGroupById(id);
-      } else {
-        this.store.clearSelectedGroup();
-        this.groupForm.reset();
-      }
-    });
+  loadGroupEffect = effect(() => {
+    const id = this.groupId();
+    if (id) {
+      this.store.loadGroupById(id);
+    } else {
+      this.store.clearSelectedGroup();
+      this.groupForm.reset();
+    }
+  });
 
-    effect(() => {
-      const currentGroup = this.group();
-      if (currentGroup) {
-        this.groupForm.patchValue({
-          name: currentGroup.name,
-          description: currentGroup.description
-        });
-      }
-    });
-  }
+  populateFormEffect = effect(() => {
+    const currentGroup = this.group();
+    if (currentGroup) {
+      this.groupForm.patchValue({
+        name: currentGroup.name,
+        description: currentGroup.description
+      });
+    }
+  });
 
   get name() {
     return this.groupForm.get('name');

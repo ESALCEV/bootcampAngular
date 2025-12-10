@@ -40,7 +40,7 @@ export class UserService {
       username: raw.username,
       firstName: raw.firstName,
       lastName: raw.lastName,
-      roles: raw.roles || []
+      roles: raw.roles ?? []
     };
   }
 }
